@@ -6,5 +6,12 @@
 # @Software: PyCharm
 
 from utils.ManagerWindow import ManagerWindow
+from threading import Thread
 
-ManagerWindow()
+
+class ManagerWindowThread(Thread):
+    def run(self):
+        ManagerWindow()
+
+
+ManagerWindowThread().start()
