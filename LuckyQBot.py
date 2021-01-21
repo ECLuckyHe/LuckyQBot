@@ -29,10 +29,7 @@ class MyThread(Thread):
             if not GlobalValues.is_connected:
                 continue
             if not printed:
-                Conn.get_member_info(
-                    547664115,
-                    673230244
-                )
+                Conn.get_session_config()
                 printed = True
 
 MyThread().start()

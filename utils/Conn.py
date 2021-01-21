@@ -441,3 +441,65 @@ class Conn:
         request_keyword += "&target=" + str(group)
         request_keyword += "&memberId=" + str(member_qq)
         return RequestSender.send_get(request_keyword)
+
+    @staticmethod
+    def set_member_info(
+            group: int,
+            member_id: int,
+            name: str = None,
+            special_title: str = None
+    ) -> dict:
+        """
+        设置群成员信息
+
+        :param group: 群号
+        :param member_id: 成员qq号
+        :param name: 新的群名片
+        :param special_title: 新的群头衔
+        :return:
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "target": group,
+            "memberId": member_id,
+            "info": {}
+        }
+        if name is not None:
+            data["info"]["name"] = name
+        if special_title is not None:
+            data["info"]["specialTitle"] = special_title
+        return RequestSender.send_post("memberInfo", data)
+
+    @staticmethod
+    def get_session_config() -> dict:
+        """
+        获取session配置
+
+        :return: 响应结果
+        """
+        request_keyword = "config?sessionKey="
+        request_keyword += GlobalValues.conn_session_key
+        return RequestSender.send_get(request_keyword)
+
+    @staticmethod
+    def set_session_config(
+            cache_size: int = None,
+            enable_websocket: bool = None
+    ) -> dict:
+        """
+        设置session配置
+
+        :param cache_size: 缓存大小
+        :param enable_websocket: 是否开启Websocket
+        :return: 响应信息
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key
+        }
+        if cache_size is not None:
+            data["cacheSize"] = cache_size
+        if enable_websocket is not None:
+            data["enableWebsocket"] = enable_websocket
+        return RequestSender.send_post("config", data)
+
+    # 此处没有注册Mirai指令相关的包装
