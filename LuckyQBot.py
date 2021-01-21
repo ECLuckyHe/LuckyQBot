@@ -29,9 +29,10 @@ class MyThread(Thread):
             if not GlobalValues.is_connected:
                 continue
             if not printed:
-                Conn.set_mute(547664115, 1405038715, 60)
-                time.sleep(10)
-                Conn.set_unmute(547664115, 1405038715)
+                Conn.get_member_info(
+                    547664115,
+                    673230244
+                )
                 printed = True
 
 MyThread().start()

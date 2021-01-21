@@ -290,10 +290,10 @@ class Conn:
         data = {
             "sessionKey": GlobalValues.conn_session_key,
             "target": int(group),
-            "memberId": str(member_qq),
+            "memberId": member_qq,
         }
         if time is not None:
-            data["time"] = str(time)
+            data["time"] = time
         return RequestSender.send_post("mute", data)
 
     @staticmethod
@@ -307,7 +307,137 @@ class Conn:
         """
         data = {
             "sessionKey": GlobalValues.conn_session_key,
-            "target": str(group),
-            "memberId": str(member_qq)
+            "target": group,
+            "memberId": member_qq
         }
         return RequestSender.send_post("unmute", data)
+
+    @staticmethod
+    def kick_member(group: int, member_qq: int, msg: str = None) -> dict:
+        """
+        移除指定成员（需要有相关权限）
+
+        :param group: 群号
+        :param member_qq: 成员qq
+        :param msg: 移除消息（？）
+        :return: 响应信息
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "target": group,
+            "memberId": member_qq
+        }
+        if msg is not None:
+            data["msg"] = msg
+        return RequestSender.send_post("kick", data)
+
+    @staticmethod
+    def quit_group(group: int) -> dict:
+        """
+        退出群聊
+
+        :param group: 群号
+        :return: 响应结果
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "target": group
+        }
+        return RequestSender.send_post("quit", data)
+
+    @staticmethod
+    def mute_all(group: int) -> dict:
+        """
+        禁言全体
+
+        :param group: 指定群号
+        :return: 响应结果
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "target": group
+        }
+        return RequestSender.send_post("muteAll", data)
+
+    @staticmethod
+    def unmute_all(group: int) -> dict:
+        """
+        解除全体禁言
+
+        :param group:群号
+        :return: 响应结果
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "target": group
+        }
+        return RequestSender.send_post("unmuteAll", data)
+
+    @staticmethod
+    def get_group_config(group: int) -> dict:
+        """
+        获取群设置
+
+        :param group: 群号
+        :return: 响应信息
+        """
+        request_keyword = "groupConfig?sessionKey="
+        request_keyword += GlobalValues.conn_session_key
+        request_keyword += "&target=" + str(group)
+        return RequestSender.send_get(request_keyword)
+
+    @staticmethod
+    def set_group_config(
+            group: int,
+            group_name: str = None,
+            group_announcement: str = None,
+            confess_talk: bool = None,
+            allow_member_invite: bool = None,
+            auto_approve: bool = None,
+            anonymous_chat: bool = None
+    ) -> dict:
+        """
+        修改群设置
+
+        :param group: 群号
+        :param group_name: 群名称
+        :param group_announcement: 群公告
+        :param confess_talk: 是否开启坦白说
+        :param allow_member_invite: 是否允许群员邀请
+        :param auto_approve: 是否开启自动审批入群
+        :param anonymous_chat: 是否允许匿名聊天
+        :return: 返回结果
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "target": group,
+            "config": {}
+        }
+        if group_name is not None:
+            data["config"]["name"] = group_name
+        if group_announcement is not None:
+            data["config"]["announcement"] = group_announcement
+        if confess_talk is not None:
+            data["config"]["confessTalk"] = confess_talk
+        if allow_member_invite is not None:
+            data["config"]["allowMemberInvite"] = allow_member_invite
+        if auto_approve is not None:
+            data["config"]["autoApprove"] = auto_approve
+        if anonymous_chat is not None:
+            data["config"]["anonymousChat"] = anonymous_chat
+        return RequestSender.send_post("groupConfig", data)
+
+    @staticmethod
+    def get_member_info(group: int, member_qq: int) -> dict:
+        """
+        获取群成员资料
+
+        :param group: 群号
+        :param member_qq: 成员qq号
+        :return: 响应信息
+        """
+        request_keyword = "memberInfo?sessionKey="
+        request_keyword += GlobalValues.conn_session_key
+        request_keyword += "&target=" + str(group)
+        request_keyword += "&memberId=" + str(member_qq)
+        return RequestSender.send_get(request_keyword)
