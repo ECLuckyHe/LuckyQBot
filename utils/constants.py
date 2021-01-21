@@ -44,8 +44,8 @@ LOGIN_STATUS_BAR_TEXT = {
     "wrongQQ": "错误的QQ号格式，请输入纯数字QQ号",
     "wrongAuthkey": "错误的授权码",
     "qqNotExist": "指定QQBot不存在，请输入正确QQ",
-    "connectSuccess": "连接成功",
-    "disconnectSuccess": "断开连接"
+    "connected": "已连接",
+    "disconnectSuccess": "连接已断开"
 }
 
 STATUS_BAR_COLOR = {

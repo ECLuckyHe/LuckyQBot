@@ -15,7 +15,7 @@ class LoginListOperation:
     """
 
     @staticmethod
-    def get_list_from_file():
+    def get_list_from_file() -> list:
         """
         从文件中获取内容的列表
 
@@ -35,7 +35,7 @@ class LoginListOperation:
         return login_list
 
     @staticmethod
-    def __new_file():
+    def __new_file() -> None:
         """
         新建一个保存登录列表的文件
 
@@ -52,7 +52,7 @@ class LoginListOperation:
             ], f)
 
     @staticmethod
-    def __write_file(login_list):
+    def __write_file(login_list: list) -> None:
         """
         写入新的内容到文件中
 
@@ -65,7 +65,7 @@ class LoginListOperation:
             yaml.dump(login_list, f)
 
     @staticmethod
-    def add_to_list(host, port, authkey, qq):
+    def add_to_list(host: str, port: str, authkey: str, qq: str) -> None:
         """
         添加新的登录项到列表中
 

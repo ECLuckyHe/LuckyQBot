@@ -16,43 +16,298 @@ class Conn:
     """
 
     @staticmethod
-    def new_session_key():
+    def new_session_key() -> dict:
         """
         连接并返回sessionKey
 
-        :return: sessionKey
+        :return: 请求返回的内容
         """
         data = {
             "authKey": GlobalValues.conn_authkey
         }
-        response_list = RequestSender.send_post("auth", data)
+        response_dict = RequestSender.send_post("auth", data)
 
         # 获取返回内容中的sessionKey并作为返回值
-        session_key = response_list["session"]
+        session_key = response_dict["session"]
+
+        # 激活session并保存sessionKey
         Conn.__verify_session_key(session_key)
-        return session_key
+        GlobalValues.conn_session_key = session_key
+
+        return response_dict
 
     @staticmethod
-    def __verify_session_key(session_key):
+    def __verify_session_key(session_key: str) -> dict:
         """
         校验SessionKey，此操作用于激活Session
-        :return:
+
+        :return: 响应内容
         """
         data = {
             "sessionKey": session_key,
             "qq": GlobalValues.conn_qq
         }
-        RequestSender.send_post("verify", data)
+        return RequestSender.send_post("verify", data)
 
     @staticmethod
-    def release_session_key():
+    def release_session_key() -> dict:
         """
         释放sessionKey
 
-        :return: 无
+        :return: 响应内容
         """
         data = {
             "sessionKey": GlobalValues.conn_session_key,
             "qq": GlobalValues.conn_qq
         }
-        RequestSender.send_post("release", data)
+        return RequestSender.send_post("release", data)
+
+    @staticmethod
+    def send_friend_message(qq: int, message_chain: list, quote: int = None) -> dict:
+        """
+        发送消息给好友
+
+        :param qq: 接收方qq
+        :param quote: 引用消息号
+        :param message_chain: 消息列表
+
+        :return: 请求响应的内容
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "qq": qq,
+            "messageChain": message_chain
+        }
+        if quote is not None:
+            data["quote"] = quote
+        return RequestSender.send_post("sendFriendMessage", data)
+
+    @staticmethod
+    def send_temp_message(qq: int, group: int, message_chain: list, quote: int = None) -> dict:
+        """
+        发送临时消息
+
+        :param message_chain:
+        :param qq: 接收方qq
+        :param group: 接收方所在群
+        :param message_chain: 消息列表
+        :param quote: 引用消息号
+
+        :return: 返回结果
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "qq": qq,
+            "group": group,
+            "messageChain": message_chain
+        }
+        if quote is not None:
+            data["quote"] = quote
+        return RequestSender.send_post("sendTempMessage", data)
+
+    @staticmethod
+    def send_group_message(group: int, message_chain: list, quote: int = None) -> dict:
+        """
+        发送群消息
+
+        :param group: 群号
+        :param message_chain: 消息列表
+        :param quote: 引用消息号
+        :return: 响应信息
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "group": group,
+            "messageChain": message_chain
+        }
+        if quote is not None:
+            data["quote"] = quote
+        return RequestSender.send_post("sendGroupMessage", data)
+
+    @staticmethod
+    def recall_message(message_id: int) -> dict:
+        """
+        撤回消息
+
+        撤回群内消息的，需要有对应权限
+
+        发送消息两分钟内可以撤销
+
+        :param message_id: 撤回消息号
+        :return: 响应结果
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "target": message_id
+        }
+        return RequestSender.send_post("recall", data)
+
+    @staticmethod
+    @DeprecationWarning
+    def send_image_message_by_url(
+            urls: list,
+            qq: int = None,
+            group: int = None
+    ) -> dict:
+        """
+        通过url发送图片，由于出现不知如何解决的问题，请不要使用这个方法，而是使用messageChain代替
+
+        如果传入了参数qq，则向该qq好友发送图片
+
+        如果传入了群号，则向对应群发送图片
+
+        如果传入了参数qq了群号，则发送临时消息图片
+
+        :param urls: 图片url列表
+        :param qq: qq号
+        :param group: 群号
+        :return: 响应信息
+        """
+        import warnings
+        warnings.warn("请不要使用该方法，会抛出异常，按照报错推断应该是mirai http本身的问题", DeprecationWarning)
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "urls": urls
+        }
+        if qq is not None:
+            data["qq"] = qq
+        if group is not None:
+            data["group"] = group
+        return RequestSender.send_post("sendImageMessage", data)
+
+    @staticmethod
+    def fetch_message(count: int) -> dict:
+        """
+        获取bot接收到的最老消息和最老各类事件（会从消息记录中删除）
+
+        :param count: 获取消息数
+        :return: 响应结果
+        """
+        request_keyword = "fetchMessage?sessionKey="
+        request_keyword += GlobalValues.conn_session_key
+        request_keyword += "&count=" + str(count)
+        return RequestSender.send_get(request_keyword)
+
+    @staticmethod
+    def fetch_latest_message(count: int) -> dict:
+        """
+        获取bot接收到的最新消息和最新各类事件（会从消息记录中删除）
+
+        :param count: 获取消息数
+        :return: 响应结果
+        """
+        request_keyword = "fetchLatestMessage?sessionKey="
+        request_keyword += GlobalValues.conn_session_key
+        request_keyword += "&count=" + str(count)
+        return RequestSender.send_get(request_keyword)
+
+    @staticmethod
+    def peek_message(count: int) -> dict:
+        """
+        获取bot接收到的最老消息和最老各类事件（不会从消息记录中删除）
+
+        注意：获取到的永远是最老的那条
+
+        :param count: 获取消息数
+        :return: 响应结果
+        """
+        request_keyword = "peekMessage?sessionKey="
+        request_keyword += GlobalValues.conn_session_key
+        request_keyword += "&count=" + str(count)
+        return RequestSender.send_get(request_keyword)
+
+    @staticmethod
+    def peek_latest_message(count: int) -> dict:
+        """
+        获取bot接收到的最新消息和最新各类事件（不会从消息记录中删除）
+
+        注意：获取到的永远是最新的那条
+
+        :param count: 获取消息数
+        :return: 响应结果
+        """
+        request_keyword = "peekLatestMessage?sessionKey="
+        request_keyword += GlobalValues.conn_session_key
+        request_keyword += "&count=" + str(count)
+        return RequestSender.send_get(request_keyword)
+
+    @staticmethod
+    def get_message_from_id(id: int) -> dict:
+        """
+        通过消息号获取某条消息
+
+        :param id: 消息号
+        :return: 响应结果
+        """
+        request_keyword = "messageFromId?sessionKey="
+        request_keyword += GlobalValues.conn_session_key
+        request_keyword += "&id=" + str(id)
+        return RequestSender.send_get(request_keyword)
+
+    @staticmethod
+    def get_message_count() -> dict:
+        """
+        获取缓存消息总数（不包含被删除的）
+
+        :return: 响应结果
+        """
+        request_keyword = "countMessage?sessionKey="
+        request_keyword += GlobalValues.conn_session_key
+        return RequestSender.send_get(request_keyword)
+
+    @staticmethod
+    def get_friend_list() -> dict:
+        """
+        获取好友列表
+
+        :return: 响应结果
+        """
+        request_keyword = "friendList?sessionKey="
+        request_keyword += GlobalValues.conn_session_key
+        return RequestSender.send_get(request_keyword)
+
+    @staticmethod
+    def get_group_list() -> dict:
+        """
+        获取群列表
+
+        :return: 响应结果
+        """
+        request_keyword = "groupList?sessionKey="
+        request_keyword += GlobalValues.conn_session_key
+        return RequestSender.send_get(request_keyword)
+
+    @staticmethod
+    def set_mute(group: int, member_qq: int, time: int = None) -> dict:
+        """
+        设置禁言
+
+        :param group: 指定群号
+        :param member_qq: 指定成员qq号
+        :param time: 禁言时间，默认为0
+        :return: 响应结果
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "target": int(group),
+            "memberId": str(member_qq),
+        }
+        if time is not None:
+            data["time"] = str(time)
+        return RequestSender.send_post("mute", data)
+
+    @staticmethod
+    def set_unmute(group: int, member_qq: int) -> dict:
+        """
+        解除禁言
+
+        :param group: 群号
+        :param member_qq: 成员qq号
+        :return: 响应信息
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "target": str(group),
+            "memberId": str(member_qq)
+        }
+        return RequestSender.send_post("unmute", data)

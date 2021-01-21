@@ -18,7 +18,7 @@ class RequestSender:
     """
 
     @staticmethod
-    def send_get(request_keyword):
+    def send_get(request_keyword: str) -> dict:
         """
         发送GET请求并返回响应内容
 
@@ -31,7 +31,7 @@ class RequestSender:
         s = requests.session()
         headers = {"Connection": "close"}
         response = s.get(url=url, headers=headers)
-        print(response.text)
+        print("Response:", response.text)
 
         # 调用方法检查code，并抛出异常
         RequestSender.__check_status_code(json.loads(response.text))
@@ -40,7 +40,7 @@ class RequestSender:
         return json.loads(response.text)
 
     @staticmethod
-    def send_post(request_keyword, data):
+    def send_post(request_keyword: str, data: dict) -> dict:
         """
         发送POST请求并返回相应内容
 
@@ -48,6 +48,8 @@ class RequestSender:
         :param data: request中的data，字典类型
         :return: 响应信息字典
         """
+        print("Post Request:", request_keyword, data)
+
         url = "http://" + GlobalValues.conn_host + ":" + GlobalValues.conn_port + "/" + request_keyword
         data = json.dumps(data)
 
@@ -55,7 +57,7 @@ class RequestSender:
         s = requests.session()
         headers = {"Connection": "close"}
         response = s.post(url=url, data=data, headers=headers)
-        print(response.text)
+        print("Response:", response.text)
 
         # 调用方法检查code，并抛出异常
         RequestSender.__check_status_code(json.loads(response.text))
@@ -64,11 +66,11 @@ class RequestSender:
         return json.loads(response.text)
 
     @staticmethod
-    def __check_status_code(response_list):
+    def __check_status_code(response_dict: dict) -> None:
         """
         检查返回结果状态码，抛出对应异常
 
-        :param response_list: 返回结果的列表
+        :param response_dict: 返回结果的列表
         :return: 无
         :exception WrongAuthkeyException
         :exception BotNotExistException
@@ -81,7 +83,11 @@ class RequestSender:
         :exception TooLongMessageException
         :exception WrongAccessException
         """
-        code = response_list["code"]
+        if not isinstance(response_dict, dict):
+            return
+        if "code" not in response_dict.keys():
+            return
+        code = response_dict["code"]
         if code == 1:
             raise WrongAuthkeyException()
         if code == 2:

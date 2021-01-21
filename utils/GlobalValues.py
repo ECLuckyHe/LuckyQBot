@@ -11,3 +11,5 @@ class GlobalValues:
     conn_authkey = None
     conn_qq = None
     conn_session_key = None
+
+    is_connected = False

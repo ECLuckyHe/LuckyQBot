@@ -29,9 +29,6 @@ class ManagerWindow:
         # 界面根节点
         self.root = Tk()
 
-        # 连接状态
-        self.is_connected = False
-
         # 主窗口标题
         self.root.title(MANAGER_TITLE)
 
@@ -211,7 +208,7 @@ class ManagerWindow:
         :return: 无
         """
 
-        if not self.is_connected:
+        if not GlobalValues.is_connected:
             # 如果是要连接
 
             # 存到全局使用变量
@@ -236,7 +233,7 @@ class ManagerWindow:
 
             # 调用连接
             try:
-                GlobalValues.conn_session_key = Conn.new_session_key()
+                Conn.new_session_key()
             except (
                 requests.exceptions.InvalidURL,
                 requests.exceptions.ConnectionError,
@@ -280,12 +277,12 @@ class ManagerWindow:
                 return
 
             self.label_login_status_bar.config(
-                text=LOGIN_STATUS_BAR_TEXT["connectSuccess"],
+                text=LOGIN_STATUS_BAR_TEXT["connected"],
                 fg=STATUS_BAR_COLOR["passed"]
             )
 
             # 修改连接状态值
-            self.is_connected = True
+            GlobalValues.is_connected = True
 
         else:
             # 如果要断开连接
@@ -306,9 +303,9 @@ class ManagerWindow:
             Conn.release_session_key()
 
             # 修改连接状态值
-            self.is_connected = False
+            GlobalValues.is_connected = False
 
-    def __set_login_entries_active(self, active):
+    def __set_login_entries_active(self, active: bool):
         """
         设置登录界面文本框的可用性
 
@@ -333,7 +330,7 @@ class ManagerWindow:
         """
 
         # 如果正在连接则释放连接
-        if self.is_connected:
+        if GlobalValues.is_connected:
             Conn.release_session_key()
 
         # 杀掉root
