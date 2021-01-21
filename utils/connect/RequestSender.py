@@ -9,7 +9,7 @@ import json
 import requests
 
 from utils.GlobalValues import GlobalValues
-from utils.ResponseExceptions import *
+from utils.connect.ResponseExceptions import *
 
 
 class RequestSender:

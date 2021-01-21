@@ -4,10 +4,9 @@
 # @Email   : 673230244@qq.com
 # @File    : Conn.py
 # @Software: PyCharm
-import json
 
 from utils.GlobalValues import GlobalValues
-from utils.RequestSender import RequestSender
+from utils.connect.RequestSender import RequestSender
 
 
 class Conn:

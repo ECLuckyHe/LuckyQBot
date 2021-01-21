@@ -9,11 +9,11 @@ from tkinter import Tk, Frame, Label, Scrollbar
 from tkinter.constants import *
 from tkinter.ttk import Notebook, Entry, Button, Treeview
 import requests
-from utils.Conn import Conn
+from utils.connect.Conn import Conn
 from utils.GlobalValues import GlobalValues
-from utils.LoginListOperation import LoginListOperation
+from utils.gui.LoginListOperation import LoginListOperation
 from utils.constants import *
-from utils.ResponseExceptions import *
+from utils.connect.ResponseExceptions import *
 
 
 class ManagerWindow:

@@ -7,10 +7,11 @@
 import time
 
 from utils.GlobalValues import GlobalValues
+from utils.api.MessageChain import MessageChain
 
-from utils.ManagerWindow import ManagerWindow
+from utils.gui.ManagerWindow import ManagerWindow
 from threading import Thread
-from utils.Conn import Conn
+from utils.connect.Conn import Conn
 
 
 class ManagerWindowThread(Thread):
@@ -29,7 +30,13 @@ class MyThread(Thread):
             if not GlobalValues.is_connected:
                 continue
             if not printed:
-                Conn.get_session_config()
+                o = MessageChain()
+                o.add_plain_text("fuck you very much")
+                Conn.send_friend_message(
+                    673230244,
+                    o.get_message_chain()
+                )
                 printed = True
+
 
 MyThread().start()
