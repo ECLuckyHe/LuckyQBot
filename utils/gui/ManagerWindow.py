@@ -141,9 +141,12 @@ class ManagerWindow:
         self.treeview_login_list.config(yscrollcommand=scrollbar_login_list.set)
         scrollbar_login_list.config(command=self.treeview_login_list.yview)
 
+        # 设置列表右键菜单
+        self.treeview_login_list.bind("<Button-3>", self.__show_login_list_pop_up_menu)
+
         # 登录界面显示的那一坨
         frame_login_menu = Frame(self.frame_login, bg=BG_COLOR)
-        frame_login_menu.pack(side=LEFT)
+        frame_login_menu.pack(side=LEFT, padx=5, pady=5)
 
         # mirai端地址
         Label(frame_login_menu, text=LOGIN_GUIDE["host"], bg=BG_COLOR).grid(row=0, sticky=E, padx=5, pady=5)
@@ -414,3 +417,12 @@ class ManagerWindow:
             self.entry_authkey.insert(END, item_list[2])
             self.entry_qq.delete(0, END)
             self.entry_qq.insert(END, item_list[3])
+
+    def __show_login_list_pop_up_menu(self, event):
+        """
+        显示右键菜单
+
+        :param event: 事件
+        :return: 无
+        """
+        pass

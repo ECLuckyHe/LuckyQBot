@@ -30,11 +30,10 @@ class MyThread(Thread):
             if not GlobalValues.is_connected:
                 continue
             if not printed:
-                o = MessageChain()
-                o.add_plain_text("fuck you very much")
-                Conn.send_friend_message(
-                    673230244,
-                    o.get_message_chain()
+                Conn.set_member_info(
+                    group=547664115,
+                    member_id=1405038715,
+                    name="狗来的"
                 )
                 printed = True
 
