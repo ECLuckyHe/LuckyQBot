@@ -55,3 +55,5 @@ STATUS_BAR_COLOR = {
 }
 
 LOGIN_LIST_FILE_PATH = "login_list.yml"
+
+POP_UP_MENU_DELETE_STR = "删除"

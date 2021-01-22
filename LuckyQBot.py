@@ -30,11 +30,6 @@ class MyThread(Thread):
             if not GlobalValues.is_connected:
                 continue
             if not printed:
-                Conn.set_member_info(
-                    group=547664115,
-                    member_id=1405038715,
-                    name="狗来的"
-                )
                 printed = True
 
 

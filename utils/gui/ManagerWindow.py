@@ -5,7 +5,7 @@
 # @File    : ManagerWindow.py
 # @Software: PyCharm
 
-from tkinter import Tk, Frame, Label, Scrollbar
+from tkinter import Tk, Frame, Label, Scrollbar, Menu
 from tkinter.constants import *
 from tkinter.ttk import Notebook, Entry, Button, Treeview
 import requests
@@ -425,4 +425,32 @@ class ManagerWindow:
         :param event: 事件
         :return: 无
         """
-        pass
+        def on_delete_event(iid):
+            """
+            删除选项的事件
+
+            :return: 无
+            """
+
+            # 删除该项
+            LoginListOperation.remove_from_list(
+                self.treeview_login_list.item(iid, "values")[0],
+                self.treeview_login_list.item(iid, "values")[1],
+                self.treeview_login_list.item(iid, "values")[2],
+                self.treeview_login_list.item(iid, "values")[3],
+            )
+            self.treeview_login_list.delete(iid)
+            self.__refresh()
+
+        # 获取选择对象
+        iid = self.treeview_login_list.identify_row(event.y)
+
+        # 如果有选择，则弹出右键菜单
+        if iid:
+            self.treeview_login_list.selection_set(iid)
+            menu_pop_up = Menu(self.treeview_login_list, tearoff=False)
+            menu_pop_up.add_command(
+                label=POP_UP_MENU_DELETE_STR,
+                command=lambda: on_delete_event(iid)
+            )
+            menu_pop_up.post(event.x_root, event.y_root)

@@ -96,3 +96,32 @@ class LoginListOperation:
 
         # 重新写入到文件中
         LoginListOperation.__write_file(login_list)
+
+    @staticmethod
+    def remove_from_list(host: str, port: str, authkey: str, qq: str) -> None:
+        """
+        从列表中移除一项
+
+        :param host: 地址
+        :param port: 端口号
+        :param authkey: 授权码
+        :param qq: 机器人qq号
+        :return: 无
+        """
+
+        # 获取当前列表
+        current_list = LoginListOperation.get_list_from_file()
+
+        # 创建删除字典
+        delete_dir = {
+            "host": host,
+            "port": port,
+            "authkey": authkey,
+            "qq": qq
+        }
+
+        # 获取并删除
+        current_list.remove(delete_dir)
+
+        # 写
+        LoginListOperation.__write_file(current_list)
