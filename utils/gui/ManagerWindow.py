@@ -5,10 +5,12 @@
 # @File    : ManagerWindow.py
 # @Software: PyCharm
 
-from tkinter import Tk, Frame, Label, Scrollbar, Menu
+from tkinter import Tk, Frame, Label, Scrollbar, Menu, Text, messagebox
 from tkinter.constants import *
 from tkinter.ttk import Notebook, Entry, Button, Treeview
 import requests
+
+from utils.api.MessageChain import MessageChain
 from utils.connect.Conn import Conn
 from utils.GlobalValues import GlobalValues
 from utils.gui.LoginListOperation import LoginListOperation
@@ -43,16 +45,35 @@ class ManagerWindow:
 
         # 选项卡
         self.tab_main = Notebook(self.root)
-        self.tab_main.pack()
+        self.tab_main.pack(expand=True, fill=BOTH)
+
+        # 登录选项卡
         self.frame_login = Frame(self.tab_main, bg=BG_COLOR)
         self.frame_login.pack(side=TOP)
         self.tab_main.add(self.frame_login, text=TAB_NAME_LIST["login"]["text"])
+
+        # 管理选项卡
         self.frame_manage = Frame(self.tab_main, bg=BG_COLOR)
         self.tab_main.add(self.frame_manage, text=TAB_NAME_LIST["manage"]["text"])
-        self.tab_main.pack(expand=True, fill=BOTH)
+
+        # 好友选项卡
+        self.frame_friend = Frame(self.tab_main, bg=BG_COLOR)
+        self.frame_friend.pack(side=TOP)
+        self.tab_main.add(self.frame_friend, text=TAB_NAME_LIST["friends"]["text"])
+
+        # 群选项卡
+        self.frame_group = Frame(self.tab_main, bg=BG_COLOR)
+        self.frame_group.pack(side=TOP)
+        self.tab_main.add(self.frame_group, text=TAB_NAME_LIST["groups"]["text"])
 
         # 初始化登录选项卡
         self.__init_login_tab()
+
+        # 初始化好友选项卡
+        self.__init_friend_tab()
+
+        # 初始化群选项卡
+        self.__init_group_tab()
 
         # 关闭窗口自动释放Session
         self.root.protocol("WM_DELETE_WINDOW", lambda: self.__on_close_root())
@@ -203,6 +224,180 @@ class ManagerWindow:
             fg=STATUS_BAR_COLOR["normal"]
         )
         self.label_login_status_bar.pack(side=LEFT)
+
+    def __init_friend_tab(self):
+        """
+        初始化好友选项卡内容
+
+        :return: 无
+        """
+
+        # 创建好友列表框架
+        frame_friend_list = Frame(self.frame_friend, bg=BG_COLOR)
+        frame_friend_list.pack(
+            side=LEFT,
+            expand=True,
+            fill=BOTH,
+            padx=5,
+            pady=5
+        )
+
+        # 创建消息测试发送框架
+        frame_friend_send = Frame(self.frame_friend, bg=BG_COLOR)
+        frame_friend_send.pack(
+            side=LEFT,
+            padx=5,
+            pady=5
+        )
+
+        # 设置列表
+        self.treeview_friend_list = Treeview(
+            frame_friend_list,
+            columns=[
+                FRIEND_GUIDE["qq"],
+                FRIEND_GUIDE["nickname"],
+                FRIEND_GUIDE["remark"]
+            ],
+            show="headings",
+            selectmode=BROWSE
+        )
+        self.treeview_friend_list.pack(
+            expand=True,
+            fill=BOTH,
+            side=LEFT
+        )
+        self.treeview_friend_list.column(
+            FRIEND_GUIDE["qq"],
+            width=0
+        )
+        self.treeview_friend_list.heading(
+            FRIEND_GUIDE["qq"],
+            text=FRIEND_GUIDE["qq"]
+        )
+        self.treeview_friend_list.column(
+            FRIEND_GUIDE["nickname"],
+            width=0
+        )
+        self.treeview_friend_list.heading(
+            FRIEND_GUIDE["nickname"],
+            text=FRIEND_GUIDE["nickname"]
+        )
+        self.treeview_friend_list.column(
+            FRIEND_GUIDE["remark"],
+            width=0
+        )
+        self.treeview_friend_list.heading(
+            FRIEND_GUIDE["remark"],
+            text=FRIEND_GUIDE["remark"]
+        )
+
+        # 刷新列表按钮
+        Button(
+            frame_friend_send,
+            text=BTN_FRIEND_REFRESH,
+            command=lambda: self.__on_click_refresh_friend_list_event()
+        ).grid(row=0, padx=5, pady=5)
+
+        # 发送纯文本窗口标题
+        Label(frame_friend_send, text=SEND_TITLE, bg=BG_COLOR).grid(row=1, padx=5, pady=5)
+
+        # 发送纯文本窗口
+        self.text_friend_send = Text(frame_friend_send, width=30, height=5)
+        self.text_friend_send.grid(row=2, padx=5, pady=5)
+
+        # 发送按钮
+        Button(
+            frame_friend_send,
+            text=BTN_SEND,
+            command=lambda: self.__on_click_send_friend_message()
+        ).grid(row=3, padx=5, pady=5)
+
+    def __init_group_tab(self):
+        """
+        初始化群选项卡内容
+
+        :return: 无
+        """
+
+        # 创建好友列表框架
+        frame_group_list = Frame(self.frame_group, bg=BG_COLOR)
+        frame_group_list.pack(
+            side=LEFT,
+            expand=True,
+            fill=BOTH,
+            padx=5,
+            pady=5
+        )
+
+        # 创建消息测试发送框架
+        frame_group_send = Frame(self.frame_group, bg=BG_COLOR)
+        frame_group_send.pack(
+            side=LEFT,
+            padx=5,
+            pady=5
+        )
+
+        # 设置列表
+        self.treeview_group_list = Treeview(
+            frame_group_list,
+            columns=[
+                GROUP_GUIDE["group"],
+                GROUP_GUIDE["name"],
+                GROUP_GUIDE["permission"]
+            ],
+            show="headings",
+            selectmode=BROWSE
+        )
+        self.treeview_group_list.pack(
+            expand=True,
+            fill=BOTH,
+            side=LEFT
+        )
+        self.treeview_group_list.column(
+            GROUP_GUIDE["group"],
+            width=0
+        )
+        self.treeview_group_list.heading(
+            GROUP_GUIDE["group"],
+            text=GROUP_GUIDE["group"]
+        )
+        self.treeview_group_list.column(
+            GROUP_GUIDE["name"],
+            width=0
+        )
+        self.treeview_group_list.heading(
+            GROUP_GUIDE["name"],
+            text=GROUP_GUIDE["name"]
+        )
+        self.treeview_group_list.column(
+            GROUP_GUIDE["permission"],
+            width=0
+        )
+        self.treeview_group_list.heading(
+            GROUP_GUIDE["permission"],
+            text=GROUP_GUIDE["permission"]
+        )
+
+        # 刷新列表按钮
+        Button(
+            frame_group_send,
+            text=BTN_FRIEND_REFRESH,
+            command=lambda: self.__on_click_refresh_group_list_event()
+        ).grid(row=0, padx=5, pady=5)
+
+        # 发送纯文本窗口标题
+        Label(frame_group_send, text=SEND_TITLE, bg=BG_COLOR).grid(row=1, padx=5, pady=5)
+
+        # 发送纯文本窗口
+        self.text_group_send = Text(frame_group_send, width=30, height=5)
+        self.text_group_send.grid(row=2, padx=5, pady=5)
+
+        # 发送按钮
+        Button(
+            frame_group_send,
+            text=BTN_SEND,
+            command=lambda: self.__on_click_send_group_message()
+        ).grid(row=3, padx=5, pady=5)
 
     def __on_click_connect_event(self):
         """
@@ -401,22 +596,18 @@ class ManagerWindow:
         :return: 无
         """
 
-        # 获取选中的项目，我也不懂，反正就是这样写
-        index = 0
-        for item in self.treeview_login_list.selection():
+        # 获取item的值
+        item_list = self.treeview_login_list.item(self.treeview_login_list.focus(), "values")
 
-            # 获取item的值
-            item_list = self.treeview_login_list.item(item, "values")
-
-            # 获取需要的项目并设置
-            self.entry_host.delete(0, END)
-            self.entry_host.insert(END, item_list[0])
-            self.entry_port.delete(0, END)
-            self.entry_port.insert(END, item_list[1])
-            self.entry_authkey.delete(0, END)
-            self.entry_authkey.insert(END, item_list[2])
-            self.entry_qq.delete(0, END)
-            self.entry_qq.insert(END, item_list[3])
+        # 获取需要的项目并设置
+        self.entry_host.delete(0, END)
+        self.entry_host.insert(END, item_list[0])
+        self.entry_port.delete(0, END)
+        self.entry_port.insert(END, item_list[1])
+        self.entry_authkey.delete(0, END)
+        self.entry_authkey.insert(END, item_list[2])
+        self.entry_qq.delete(0, END)
+        self.entry_qq.insert(END, item_list[3])
 
     def __show_login_list_pop_up_menu(self, event):
         """
@@ -433,12 +624,7 @@ class ManagerWindow:
             """
 
             # 删除该项
-            LoginListOperation.remove_from_list(
-                self.treeview_login_list.item(iid, "values")[0],
-                self.treeview_login_list.item(iid, "values")[1],
-                self.treeview_login_list.item(iid, "values")[2],
-                self.treeview_login_list.item(iid, "values")[3],
-            )
+            LoginListOperation.remove_from_list(*self.treeview_login_list.item(iid, "values"))
             self.treeview_login_list.delete(iid)
             self.__refresh()
 
@@ -454,3 +640,99 @@ class ManagerWindow:
                 command=lambda: on_delete_event(iid)
             )
             menu_pop_up.post(event.x_root, event.y_root)
+
+    def __on_click_refresh_friend_list_event(self):
+        """
+        点击刷新好友列表事件
+
+        :return: 无
+        """
+        try:
+            # 如果未连接，则可能会抛出异常，此处直接弹出错误消息框
+            friend_list = Conn.get_friend_list()
+        except:
+            messagebox.showerror(message=REFRESH_ERROR_MSG)
+            return
+
+        # 删除列表内容
+        self.treeview_friend_list.delete(*self.treeview_friend_list.get_children())
+
+        # 解析friend_list
+        for friend_block in friend_list:
+            self.treeview_friend_list.insert("", index=END, values=(
+                friend_block["id"],
+                friend_block["nickname"],
+                friend_block["remark"]
+            ))
+
+    def __on_click_refresh_group_list_event(self):
+        """
+        点击刷新群列表事件
+
+        :return: 无
+        """
+        try:
+            # 如果未连接，则可能会抛出异常，此处直接弹出错误消息框
+            group_list = Conn.get_group_list()
+        except:
+            messagebox.showerror(message=REFRESH_ERROR_MSG)
+            return
+
+        # 删除列表内容
+        self.treeview_group_list.delete(*self.treeview_group_list.get_children())
+
+        # 解析group_list
+        for group_block in group_list:
+            self.treeview_group_list.insert("", index=END, values=(
+                group_block["id"],
+                group_block["name"],
+                group_block["permission"]
+            ))
+
+    def __on_click_send_friend_message(self):
+        """
+        点击发送消息给好友按钮
+
+        :return: 无
+        """
+
+        # 获取到选中好友的值列表
+        value_list = self.treeview_friend_list.item(self.treeview_friend_list.focus(), "values")
+
+        try:
+            # 获取qq并发送消息
+            qq = value_list[0]
+            message_chain = MessageChain()
+            text = self.text_friend_send.get(1.0, END)
+            if text == "\n":
+                return
+            message_chain.add_plain_text(text)
+            Conn.send_friend_message(qq, message_chain.get_message_chain())
+            self.text_friend_send.delete(1.0, END)
+        except:
+            messagebox.showerror(message=SEND_ERROR_MSG)
+            return
+
+    def __on_click_send_group_message(self):
+        """
+        点击发送消息给群按钮
+
+        :return: 无
+        """
+
+        # 获取到选中群的值列表
+        value_list = self.treeview_group_list.item(self.treeview_group_list.focus(), "values")
+
+        try:
+            # 获取qq并发送消息
+            qq = value_list[0]
+            message_chain = MessageChain()
+            text = self.text_group_send.get(1.0, END)
+            if text == "\n":
+                return
+            message_chain.add_plain_text(text)
+            Conn.send_group_message(qq, message_chain.get_message_chain())
+            self.text_group_send.delete(1.0, END)
+        except:
+            messagebox.showerror(message=SEND_ERROR_MSG)
+            return

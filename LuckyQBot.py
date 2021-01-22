@@ -30,6 +30,7 @@ class MyThread(Thread):
             if not GlobalValues.is_connected:
                 continue
             if not printed:
+                Conn.get_group_list()
                 printed = True
 
 

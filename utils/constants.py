@@ -17,6 +17,14 @@ TAB_NAME_LIST = {
     "manage": {
         "text": "机器人管理",
         "num": 1
+    },
+    "friends": {
+        "text": "好友",
+        "num": 2
+    },
+    "groups": {
+        "text": "群",
+        "num": 3
     }
 }
 
@@ -25,6 +33,18 @@ LOGIN_GUIDE = {
     "port": "端口号",
     "authkey": "授权码(authKey)",
     "qq": "QQ号"
+}
+
+FRIEND_GUIDE = {
+    "qq": "QQ",
+    "nickname": "昵称",
+    "remark": "remark（保留，不知道是啥）"
+}
+
+GROUP_GUIDE = {
+    "group": "群号",
+    "name": "群名",
+    "permission": "权限"
 }
 
 PWD_CHAR_CIRCLE = "●"
@@ -57,3 +77,13 @@ STATUS_BAR_COLOR = {
 LOGIN_LIST_FILE_PATH = "login_list.yml"
 
 POP_UP_MENU_DELETE_STR = "删除"
+
+SEND_TITLE = "发送内容"
+
+BTN_SEND = "发送消息"
+
+BTN_FRIEND_REFRESH = "刷新好友列表"
+
+REFRESH_ERROR_MSG = "发生错误，请确保已连接"
+
+SEND_ERROR_MSG = "未选择对象或对象不存在"
