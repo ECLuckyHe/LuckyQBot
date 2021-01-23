@@ -7,7 +7,7 @@
 from utils.event.Event import Event
 from utils.constants import *
 from utils.info.Group import Group
-from utils.info.Operator import Operator
+from utils.info.Member import Member
 
 
 class BotOnlineEvent(Event):
@@ -126,7 +126,7 @@ class BotMuteEvent(Event):
     def __init__(
             self,
             duration_seconds: int,
-            operator: Operator
+            operator: Member
     ):
         """
         构造方法
@@ -147,7 +147,7 @@ class BotUnmuteEvent(Event):
 
     def __init__(
             self,
-            operator: Operator
+            operator: Member
     ):
         """
         构造方法

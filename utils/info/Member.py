@@ -2,14 +2,14 @@
 # @Time    : 2021/1/23 11:45
 # @Author  : Lucky_He
 # @Email   : 673230244@qq.com
-# @File    : Operator.py
+# @File    : Member.py
 # @Software: PyCharm
 from utils.info.Group import Group
 
 
-class Operator:
+class Member:
     """
-    操作者信息
+    成员信息
     """
 
     def __init__(
@@ -22,10 +22,10 @@ class Operator:
         """
         构造方法
 
-        :param qq: 操作者qq
-        :param name: 操作者群名片
-        :param permission: 操作者权限
-        :param group: 操作的群
+        :param qq: 成员qq
+        :param name: 成员群名片
+        :param permission: 成员权限
+        :param group: 所在群或操作群
         """
         self.qq = qq
         self.name = name
