@@ -502,3 +502,87 @@ class Conn:
         return RequestSender.send_post("config", data)
 
     # 此处没有注册Mirai指令相关的包装
+
+    @staticmethod
+    def resp_new_friend_request(
+            event_id: int,
+            from_qq: int,
+            group_id: int,
+            operate: int,
+            message: str
+    ):
+        """
+        处理添加新好友事件
+
+        :param event_id: 事件号
+        :param from_qq: 申请人qq
+        :param group_id: 申请人所在群，为0表示不是从群内 添加
+        :param operate: 响应操作类型，0表示同意，1表示拒绝，2表示拒绝并拉黑
+        :param message: 回复的信息
+        :return: 无
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "eventId": event_id,
+            "fromId": from_qq,
+            "groupId": group_id,
+            "operate": operate,
+            "message": message
+        }
+        return RequestSender.send_post("resp/newFriendRequestEvent", data)
+
+    @staticmethod
+    def resp_member_join_request(
+            event_id: int,
+            from_qq :int,
+            group_id: int,
+            operate: int,
+            message: str
+    ):
+        """
+        处理入群申请
+
+        :param event_id: 事件号
+        :param from_qq: 申请人qq
+        :param group_id: 加的群号
+        :param operate: 响应操作类型，0同意，1拒绝，2忽略，3拒绝并拉黑不再接受请求，4忽略并拉黑不再接受请求
+        :param message: 回复信息
+        :return:
+        """
+        data = {
+            "sessionKey": GlobalValues.conn_session_key,
+            "eventId": event_id,
+            "fromId": from_qq,
+            "groupId": group_id,
+            "operate": operate,
+            "message": message
+        }
+        return RequestSender.send_post("resp/memberJoinRequestEvent", data)
+
+    @staticmethod
+    def resp_bot_invited_join_group_request_event(
+            event_id: int,
+            from_qq: int,
+            group_id: int,
+            operate: int,
+            message: str
+    ):
+        """
+        处理被邀请入群申请
+
+        :param event_id: 事件号
+        :param from_qq: 邀请人qq
+        :param group_id: 被邀请入群群号
+        :param operate: 被邀请入群群名
+        :param message: 回复的信息
+        :return: 无
+        """
+        data = {
+            "sessionKey": GlobalValues,
+            "eventId": event_id,
+            "fromId": from_qq,
+            "groupId": group_id,
+            "operate": operate,
+            "message": message
+        }
+        return RequestSender.send_post("resp/botInvitedJoinGroupRequestEvent", data)

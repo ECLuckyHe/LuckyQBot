@@ -30,8 +30,8 @@ class MyThread(Thread):
             if not GlobalValues.is_connected:
                 continue
             if not printed:
-                Conn.get_group_list()
-                printed = True
+                Conn.fetch_latest_message(1)
+                printed = False
 
 
 MyThread().start()

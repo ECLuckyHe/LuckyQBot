@@ -17,7 +17,7 @@ class GroupRecallEvent(Event):
 
     def __init__(
             self,
-            author_id: int,
+            author_qq: int,
             message_id: int,
             time: int,
             group: Group,
@@ -26,7 +26,7 @@ class GroupRecallEvent(Event):
         """
         构造方法
 
-        :param author_id: 原消息发送者的QQ号
+        :param author_qq: 原消息发送者的QQ号
         :param message_id: 原消息id
         :param time: 原消息发送时间
         :param group: 消息撤回所在的群
@@ -34,7 +34,7 @@ class GroupRecallEvent(Event):
         """
         Event.__init__(self)
         self.type = GROUP_RECALL_EVENT
-        self.author_id = author_id
+        self.author_qq = author_qq
         self.message_id = message_id
         self.time = time
         self.group = group
@@ -48,7 +48,7 @@ class FriendRecallEvent(Event):
 
     def __init__(
             self,
-            author_id: int,
+            author_qq: int,
             message_id: int,
             time: int,
             operator_qq: int
@@ -56,14 +56,14 @@ class FriendRecallEvent(Event):
         """
         构造方法
 
-        :param author_id: 原消息发送者qq
+        :param author_qq: 原消息发送者qq
         :param message_id: 原消息id
         :param time: 原消息发送时间
         :param operator_qq: 好友qq或者botqq（？？？原文档是这么写的啊）
         """
         Event.__init__(self)
         self.type = FRIEND_RECALL_EVENT
-        self.author_id = author_id
+        self.author_qq = author_qq
         self.message_id = message_id
         self.time = time
         self.operator_qq = operator_qq
