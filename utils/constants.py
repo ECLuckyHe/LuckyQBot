@@ -78,7 +78,7 @@ LOGIN_LIST_FILE_PATH = "login_list.yml"
 
 POP_UP_MENU_DELETE_STR = "删除"
 
-SEND_TITLE = "发送内容"
+SEND_TITLE = "测试发送内容"
 
 BTN_SEND = "发送消息"
 
@@ -124,3 +124,15 @@ MEMBER_UNMUTE_EVENT = "MemberUnmuteEvent"
 NEW_FRIEND_REQUEST_EVENT = "NewFriendRequestEvent"
 MEMBER_JOIN_REQUEST_EVENT = "MemberJoinRequestEvent"
 BOT_INVITED_JOIN_GROUP_REQUEST_EVENT = "BotInvitedJoinGroupRequestEvent"
+
+MANAGE_GUIDE = {
+    "commandHead": "指令头",
+    "debug": "调试模式",
+    "qq": "QQ",
+    "botOpQQ": "Bot管理员QQ",
+    "addOpQQ": "添加Bot管理QQ",
+    "btnAddOpQQ": "添加管理QQ",
+    "removeOpQQ": "删除管理QQ",
+    "save": "保存设置",
+    "reload": "重载设置"
+}

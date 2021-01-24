@@ -5,7 +5,14 @@
 # @File    : ResponseExceptions.py
 # @Software: PyCharm
 
-class WrongAuthkeyException(Exception):
+class ResponseException(Exception):
+    """
+    所有该文件中异常的父类
+    """
+    pass
+
+
+class WrongAuthkeyException(ResponseException):
     """
     当返回信息状态码为1时的异常
     """
@@ -13,7 +20,7 @@ class WrongAuthkeyException(Exception):
         return "错误的Authkey"
 
 
-class BotNotExistException(Exception):
+class BotNotExistException(ResponseException):
     """
     当状态码为2时的异常
     """
@@ -21,7 +28,7 @@ class BotNotExistException(Exception):
         return "指定的Bot不存在"
 
 
-class SessionInvalidException(Exception):
+class SessionInvalidException(ResponseException):
     """
     当状态码为3时的异常
     """
@@ -29,7 +36,7 @@ class SessionInvalidException(Exception):
         return "Session失效或不存在"
 
 
-class SessionNotCertifiedException(Exception):
+class SessionNotCertifiedException(ResponseException):
     """
     当状态码为4时的异常
     """
@@ -37,7 +44,7 @@ class SessionNotCertifiedException(Exception):
         return "Session未认证（未激活）"
 
 
-class MessageReceiverNotExistException(Exception):
+class MessageReceiverNotExistException(ResponseException):
     """
     状态码为5时的异常
     """
@@ -45,7 +52,7 @@ class MessageReceiverNotExistException(Exception):
         return "发送消息目标不存在（指定对象不存在）"
 
 
-class FileNotExistException(Exception):
+class FileNotExistException(ResponseException):
     """
     状态码为6时的异常
     """
@@ -53,7 +60,7 @@ class FileNotExistException(Exception):
         return "指定文件不存在"
 
 
-class NoPermissionException(Exception):
+class NoPermissionException(ResponseException):
     """
     状态码为10的异常
     """
@@ -61,7 +68,7 @@ class NoPermissionException(Exception):
         return "Bot没有对应的操作权限"
 
 
-class BotSpeakNotAllowedException(Exception):
+class BotSpeakNotAllowedException(ResponseException):
     """
     状态码为20时的异常
     """
@@ -69,7 +76,7 @@ class BotSpeakNotAllowedException(Exception):
         return "Bot当前无法向指定群发送信息"
 
 
-class TooLongMessageException(Exception):
+class TooLongMessageException(ResponseException):
     """
     状态码为30时的异常
     """
@@ -77,7 +84,7 @@ class TooLongMessageException(Exception):
         return "消息过长"
 
 
-class WrongAccessException(Exception):
+class WrongAccessException(ResponseException):
     """
     状态码为400时的异常
     """

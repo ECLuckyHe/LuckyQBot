@@ -5,7 +5,7 @@
 # @File    : ManagerWindow.py
 # @Software: PyCharm
 
-from tkinter import Tk, Frame, Label, Scrollbar, Menu, Text, messagebox
+from tkinter import Tk, Frame, Label, Scrollbar, Menu, Text, messagebox, Checkbutton, BooleanVar
 from tkinter.constants import *
 from tkinter.ttk import Notebook, Entry, Button, Treeview
 import requests
@@ -74,6 +74,9 @@ class ManagerWindow:
 
         # 初始化群选项卡
         self.__init_group_tab()
+
+        # 初始化管理选项卡
+        self.__init_manage_tab()
 
         # 关闭窗口自动释放Session
         self.root.protocol("WM_DELETE_WINDOW", lambda: self.__on_close_root())
@@ -398,6 +401,82 @@ class ManagerWindow:
             text=BTN_SEND,
             command=lambda: self.__on_click_send_group_message()
         ).grid(row=3, padx=5, pady=5)
+
+    def __init_manage_tab(self):
+        """
+        初始化管理选项卡
+
+        :return: 无
+        """
+
+        f_manage = Frame(self.frame_manage, bg=BG_COLOR)
+        f_manage.pack(padx=5, pady=5, expand=True)
+
+        # 指定头指示
+        Label(f_manage, text=MANAGE_GUIDE["commandHead"], bg=BG_COLOR).grid(
+            row=0,
+            column=0,
+            padx=5,
+            pady=5,
+            sticky=E
+        )
+
+        # 指令头文本框
+        self.entry_command_head = Entry(f_manage)
+        self.entry_command_head.grid(row=0, column=1, columnspan=2, padx=5, pady=5, sticky=EW)
+
+        # 调试复选框
+        self.debug_var = BooleanVar()
+        checkbutton_debug = Checkbutton(
+            f_manage,
+            text=MANAGE_GUIDE["debug"],
+            onvalue=True,
+            offvalue=False,
+            variable=self.debug_var,
+            bg=BG_COLOR
+        )
+        checkbutton_debug.grid(row=1, column=0, columnspan=3, padx=5, pady=5)
+
+        # Bot管理员qq标签
+        Label(f_manage, text=MANAGE_GUIDE["botOpQQ"], bg=BG_COLOR).grid(row=2, column=0, columnspan=3, padx=5, pady=5)
+
+        # bot管理qq
+        self.treeview_op = Treeview(
+            f_manage,
+            columns=[
+                MANAGE_GUIDE["qq"]
+            ],
+            show="headings",
+            selectmode=BROWSE
+        )
+        self.treeview_op.column(MANAGE_GUIDE["qq"], width=200)
+        self.treeview_op.heading(MANAGE_GUIDE["qq"], text=MANAGE_GUIDE["qq"])
+        self.treeview_op.grid(
+            row=3,
+            column=0,
+            columnspan=3,
+            rowspan=10,
+            sticky=EW
+        )
+
+        # 添加管理标签
+        Label(f_manage, text=MANAGE_GUIDE["addOpQQ"], bg=BG_COLOR).grid(row=13, column=0, padx=5, pady=5)
+
+        # 添加管理文本框
+        self.entry_add_op = Entry(f_manage)
+        self.entry_add_op.grid(row=13, column=1, padx=5, pady=5)
+
+        # 添加添加按钮
+        Button(
+            f_manage,
+            text=MANAGE_GUIDE["btnAddOpQQ"]
+        ).grid(row=13, column=2, padx=5, pady=5, sticky=EW)
+
+        # 保存按钮
+        Button(
+            f_manage,
+            text=MANAGE_GUIDE["save"]
+        ).grid(row=14, column=0, padx=5, pady=5, sticky=EW)
 
     def __on_click_connect_event(self):
         """
