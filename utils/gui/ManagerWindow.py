@@ -4,7 +4,6 @@
 # @Email   : 673230244@qq.com
 # @File    : ManagerWindow.py
 # @Software: PyCharm
-
 from tkinter import Tk, Frame, Label, Scrollbar, Menu, Text, messagebox, Checkbutton, BooleanVar
 from tkinter.constants import *
 from tkinter.ttk import Notebook, Entry, Button, Treeview
@@ -13,9 +12,12 @@ import requests
 from utils.api.MessageChain import MessageChain
 from utils.connect.Conn import Conn
 from utils.GlobalValues import GlobalValues
-from utils.gui.LoginListOperation import LoginListOperation
+from utils.gui.operation.ConfigOperation import ConfigOperation
+from utils.gui.operation.LoginListOperation import LoginListOperation
 from utils.constants import *
-from utils.connect.ResponseExceptions import *
+from utils.api.ResponseExceptions import *
+from utils.gui.operation.OpListOperation import OpListOperation
+from utils.gui.thread.FetchMessageThrerad import FetchMessageThread
 
 
 class ManagerWindow:
@@ -83,6 +85,11 @@ class ManagerWindow:
 
         # 刷新显示
         self.__refresh()
+
+        # 运行相关线程
+        fetch_message_thread = FetchMessageThread()
+        fetch_message_thread.daemon = True
+        fetch_message_thread.start()
 
         # 显示界面
         self.root.mainloop()
@@ -423,7 +430,7 @@ class ManagerWindow:
 
         # 指令头文本框
         self.entry_command_head = Entry(f_manage)
-        self.entry_command_head.grid(row=0, column=1, columnspan=2, padx=5, pady=5, sticky=EW)
+        self.entry_command_head.grid(row=0, column=1, padx=5, pady=5, sticky=EW)
 
         # 调试复选框
         self.debug_var = BooleanVar()
@@ -437,46 +444,66 @@ class ManagerWindow:
         )
         checkbutton_debug.grid(row=1, column=0, columnspan=3, padx=5, pady=5)
 
-        # Bot管理员qq标签
-        Label(f_manage, text=MANAGE_GUIDE["botOpQQ"], bg=BG_COLOR).grid(row=2, column=0, columnspan=3, padx=5, pady=5)
+        # 启用机器人
+        self.enable_var = BooleanVar()
+        checkbutton_enable = Checkbutton(
+            f_manage,
+            text=MANAGE_GUIDE["enable"],
+            onvalue=True,
+            offvalue=False,
+            variable=self.enable_var,
+            bg=BG_COLOR
+        )
+        checkbutton_enable.grid(row=2, column=0, columnspan=3, padx=5, pady=5)
 
-        # bot管理qq
-        self.treeview_op = Treeview(
+        # 配置保存
+        Button(
+            f_manage,
+            text=MANAGE_GUIDE["saveConfig"],
+            command=self.__on_click_save_config
+        ).grid(
+            row=3,
+            column=1,
+            padx=5,
+            pady=5,
+            sticky=EW
+        )
+
+        # bot管理qq列表
+        self.treeview_op_list = Treeview(
             f_manage,
             columns=[
-                MANAGE_GUIDE["qq"]
+                MANAGE_GUIDE["botOpQQ"]
             ],
             show="headings",
             selectmode=BROWSE
         )
-        self.treeview_op.column(MANAGE_GUIDE["qq"], width=200)
-        self.treeview_op.heading(MANAGE_GUIDE["qq"], text=MANAGE_GUIDE["qq"])
-        self.treeview_op.grid(
-            row=3,
+        self.treeview_op_list.column(MANAGE_GUIDE["botOpQQ"], width=200)
+        self.treeview_op_list.heading(MANAGE_GUIDE["botOpQQ"], text=MANAGE_GUIDE["botOpQQ"])
+        self.treeview_op_list.grid(
+            row=4,
             column=0,
             columnspan=3,
             rowspan=10,
             sticky=EW
         )
 
+        # 列表右键
+        self.treeview_op_list.bind("<Button-3>", self.__show_op_list_pop_up_menu)
+
         # 添加管理标签
-        Label(f_manage, text=MANAGE_GUIDE["addOpQQ"], bg=BG_COLOR).grid(row=13, column=0, padx=5, pady=5)
+        Label(f_manage, text=MANAGE_GUIDE["addOpQQ"], bg=BG_COLOR).grid(row=14, column=0, padx=5, pady=5)
 
         # 添加管理文本框
         self.entry_add_op = Entry(f_manage)
-        self.entry_add_op.grid(row=13, column=1, padx=5, pady=5)
+        self.entry_add_op.grid(row=14, column=1, padx=5, pady=5)
 
         # 添加添加按钮
         Button(
             f_manage,
-            text=MANAGE_GUIDE["btnAddOpQQ"]
-        ).grid(row=13, column=2, padx=5, pady=5, sticky=EW)
-
-        # 保存按钮
-        Button(
-            f_manage,
-            text=MANAGE_GUIDE["save"]
-        ).grid(row=14, column=0, padx=5, pady=5, sticky=EW)
+            text=MANAGE_GUIDE["btnAddOpQQ"],
+            command=lambda: self.__on_click_add_op()
+        ).grid(row=14, column=2, padx=5, pady=5, sticky=EW)
 
     def __on_click_connect_event(self):
         """
@@ -639,8 +666,53 @@ class ManagerWindow:
                     one_record["qq"]
                 ))
 
+        def refresh_op_list():
+            """
+            刷新bot管理员qq列表
+
+            :return: 无
+            """
+
+            # 删除目前表中的所有内容
+            self.treeview_op_list.delete(*self.treeview_op_list.get_children())
+
+            # 把内容添加到显示中
+            for one_record in OpListOperation.get_list_from_file():
+                self.treeview_op_list.insert("", index=END, values=(
+                    one_record
+                ))
+
+        def refresh_config():
+            """
+            刷新配置
+
+            :return: 无
+            """
+
+            # 读取config
+            config_dict = ConfigOperation.get_dir_from_file()
+
+            # 将文件中的内容显示到界面中
+            self.entry_command_head.delete(0, END)
+            self.entry_command_head.insert(END, config_dict["commandHead"])
+
+            # 设置复选框默认勾选
+            self.debug_var.set(config_dict["debug"])
+            self.enable_var.set(config_dict["enable"])
+
+            # 将内容设置到全局变量
+            GlobalValues.command_head = config_dict["commandHead"]
+            GlobalValues.debug_var = self.debug_var
+            GlobalValues.enable_var = self.enable_var
+
         # 调用刷新登录列表
         refresh_login_list()
+
+        # 调用刷新op列表
+        refresh_op_list()
+
+        # 刷新config显示
+        refresh_config()
 
     def __on_click_add_to_login_list(self):
         """
@@ -815,3 +887,86 @@ class ManagerWindow:
         except:
             messagebox.showerror(message=SEND_ERROR_MSG)
             return
+
+    def __on_click_add_op(self):
+        """
+        点击添加op按钮事件
+
+        :return: 无
+        """
+
+        content = self.entry_add_op.get()
+
+        # 如果添加op的文本框中没有东西，则不添加
+        if content == "":
+            return
+
+        # 如果转换数字出错则不添加
+        try:
+            op_qq = int(content)
+        except ValueError:
+            return
+
+        # 添加到op列表中
+        OpListOperation.add_to_list(op_qq)
+
+        # 刷新显示
+        self.__refresh()
+
+    def __show_op_list_pop_up_menu(self, event):
+        """
+        op列表右键菜单
+
+        :return: 无
+        """
+
+        def on_delete_event(op_qq):
+            """
+            删除选项的事件
+
+            :return: 无
+            """
+
+            # 删除该项
+            # 注意此处的强转，由于能够保证显示出来的内容一定只含有数字，故可以直接转换
+            OpListOperation.remove_from_list(int(self.treeview_op_list.item(op_qq, "values")[0]))
+            self.treeview_op_list.delete(op_qq)
+            self.__refresh()
+
+        # 获取选择对象
+        op_qq = self.treeview_op_list.identify_row(event.y)
+
+        # 如果有选择，则弹出右键菜单
+        if op_qq:
+            menu_pop_up = Menu(self.treeview_op_list, tearoff=False)
+            self.treeview_op_list.selection_set(op_qq)
+            menu_pop_up.add_command(
+                label=POP_UP_MENU_DELETE_STR,
+                command=lambda: on_delete_event(op_qq)
+            )
+            menu_pop_up.post(event.x_root, event.y_root)
+
+    def __on_click_save_config(self):
+        """
+        点击保存配置事件
+
+        :return: 无
+        """
+
+        content = self.entry_command_head.get()
+
+        # 如果为空，则不存入，但是刷新
+        # 这样是为了保证点击后会显示原来的设置
+        if content == "":
+            self.__refresh()
+            return
+
+        ConfigOperation.modify_dict("commandHead", content)
+        ConfigOperation.modify_dict("debug", self.debug_var.get())
+        ConfigOperation.modify_dict("enable", self.enable_var.get())
+
+        # 刷新
+        self.__refresh()
+
+        # 弹出对话框
+        messagebox.showinfo(message=MANAGE_GUIDE["successSaveCommandHeadMsg"])

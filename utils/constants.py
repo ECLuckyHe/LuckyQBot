@@ -127,12 +127,16 @@ BOT_INVITED_JOIN_GROUP_REQUEST_EVENT = "BotInvitedJoinGroupRequestEvent"
 
 MANAGE_GUIDE = {
     "commandHead": "指令头",
-    "debug": "调试模式",
-    "qq": "QQ",
+    "debug": "调试模式（在消息最后追加[调试]字样）",
     "botOpQQ": "Bot管理员QQ",
     "addOpQQ": "添加Bot管理QQ",
     "btnAddOpQQ": "添加管理QQ",
     "removeOpQQ": "删除管理QQ",
-    "save": "保存设置",
-    "reload": "重载设置"
+    "saveConfig": "保存配置",
+    "successSaveCommandHeadMsg": "保存成功！",
+    "enable": "启用机器人（取一条消息、执行事件、从消息记录中删除）"
 }
+
+OP_LIST_FILE_PATH = "op_list.yml"
+
+CONFIG_FILE_PATH = "config.yml"

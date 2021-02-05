@@ -13,14 +13,7 @@ from utils.gui.ManagerWindow import ManagerWindow
 from threading import Thread
 from utils.connect.Conn import Conn
 
-
-class ManagerWindowThread(Thread):
-    def run(self):
-        ManagerWindow()
-
-
-ManagerWindowThread().start()
-
+ManagerWindow()
 
 class MyThread(Thread):
     def run(self):
@@ -32,3 +25,4 @@ class MyThread(Thread):
             if not printed:
                 printed = True
 
+# MyThread().start()

@@ -9,7 +9,7 @@ import json
 import requests
 
 from utils.GlobalValues import GlobalValues
-from utils.connect.ResponseExceptions import *
+from utils.api.ResponseExceptions import *
 
 
 class RequestSender:
@@ -31,7 +31,10 @@ class RequestSender:
         s = requests.session()
         headers = {"Connection": "close"}
         response = s.get(url=url, headers=headers)
-        print("Response:", response.text)
+
+        # 只有在调试模式下才输出
+        if GlobalValues.debug_var.get():
+            print("Response:", response.text)
 
         # 调用方法检查code，并抛出异常
         RequestSender.__check_status_code(json.loads(response.text))
@@ -48,7 +51,9 @@ class RequestSender:
         :param data: request中的data，字典类型
         :return: 响应信息字典
         """
-        print("Post Request:", request_keyword, data)
+        # 只有在调试模式下才输出
+        if GlobalValues.debug_var.get():
+            print("Post Request:", request_keyword, data)
 
         url = "http://" + GlobalValues.conn_host + ":" + GlobalValues.conn_port + "/" + request_keyword
         data = json.dumps(data)
@@ -57,7 +62,10 @@ class RequestSender:
         s = requests.session()
         headers = {"Connection": "close"}
         response = s.post(url=url, data=data, headers=headers)
-        print("Response:", response.text)
+
+        # 只有在调试模式下才输出
+        if GlobalValues.debug_var.get():
+            print("Response:", response.text)
 
         # 调用方法检查code，并抛出异常
         RequestSender.__check_status_code(json.loads(response.text))
@@ -83,10 +91,13 @@ class RequestSender:
         :exception TooLongMessageException
         :exception WrongAccessException
         """
+
+        # 出现的一些特殊情况可以直接忽略
         if not isinstance(response_dict, dict):
             return
         if "code" not in response_dict.keys():
             return
+
         code = response_dict["code"]
         if code == 1:
             raise WrongAuthkeyException()
