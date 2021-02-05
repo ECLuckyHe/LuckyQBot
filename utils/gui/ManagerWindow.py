@@ -17,7 +17,7 @@ from utils.gui.operation.LoginListOperation import LoginListOperation
 from utils.constants import *
 from utils.api.ResponseExceptions import *
 from utils.gui.operation.OpListOperation import OpListOperation
-from utils.gui.thread.FetchMessageThrerad import FetchMessageThread
+from utils.gui.thread.FetchMessageThread import FetchMessageThread
 
 
 class ManagerWindow:

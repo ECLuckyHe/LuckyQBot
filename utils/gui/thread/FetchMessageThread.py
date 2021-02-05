@@ -2,7 +2,7 @@
 # @Time    : 2021/2/5 23:43
 # @Author  : Lucky_He
 # @Email   : 673230244@qq.com
-# @File    : FetchMessageThrerad.py
+# @File    : FetchMessageThread.py
 # @Software: PyCharm
 import time
 from threading import Thread
