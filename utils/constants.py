@@ -140,3 +140,8 @@ MANAGE_GUIDE = {
 OP_LIST_FILE_PATH = "op_list.yml"
 
 CONFIG_FILE_PATH = "config.yml"
+
+# 消息来源
+GROUP_MSG = "GroupMessage"
+FRIEND_MSG = "FriendMessage"
+TEMP_MSG = "TempMessage"
