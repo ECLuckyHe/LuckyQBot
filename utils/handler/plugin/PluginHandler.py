@@ -7,8 +7,9 @@
 
 import os
 
-from utils.info.Message import Message
+from utils.event.Event import Event
 from utils.handler.plugin.PluginCallThread import *
+from utils.constants import *
 
 
 class PluginHandler:
@@ -79,3 +80,108 @@ class PluginHandler:
 
             message_thread.daemon = True
             message_thread.start()
+
+    @staticmethod
+    def call_on_event(event: Event):
+        """
+        执行插件内关于事件的函数
+
+        :param event: 事件
+        :return: 无
+        """
+        for plugin_name in PluginHandler.get_plugin_name_list():
+
+            event_thread = None
+            # 每个event都创建一个线程
+            if event.type == BOT_ONLINE_EVENT:
+                event_thread = OnBotOnlineEventThread(plugin_name, event)
+
+            elif event.type == BOT_OFFLINE_ACTIVE_EVENT:
+                event_thread = OnBotOfflineActiveEventThread(plugin_name, event)
+
+            elif event.type == BOT_OFFLINE_FORCE_EVENT:
+                event_thread = OnBotOfflineForceEventThread(plugin_name, event)
+
+            elif event.type == BOT_OFFLINE_DROPPED_EVENT:
+                event_thread = OnBotOfflineDroppedEventThread(plugin_name, event)
+
+            elif event.type == BOT_RELOGIN_EVENT:
+                event_thread = OnBotReloginEventThread(plugin_name, event)
+
+            elif event.type == BOT_GROUP_PERMISSION_CHANGE_EVENT:
+                event_thread = OnBotGroupPermissionChangeEventThread(plugin_name, event)
+
+            elif event.type == BOT_MUTE_EVENT:
+                event_thread = OnBotMuteEventThread(plugin_name, event)
+
+            elif event.type == BOT_UNMUTE_EVENT:
+                event_thread = OnBotUnmuteEventThread(plugin_name, event)
+
+            elif event.type == BOT_JOIN_GROUP_EVENT:
+                event_thread = OnBotJoinGroupEventThread(plugin_name, event)
+
+            elif event.type == BOT_LEAVE_ACTIVE_EVENT:
+                event_thread = OnBotLeaveActiveEventThread(plugin_name, event)
+
+            elif event.type == BOT_LEAVE_KICK_EVENT:
+                event_thread = OnBotLeaveKickEventThread(plugin_name, event)
+
+            elif event.type == GROUP_RECALL_EVENT:
+                event_thread = OnGroupRecallEventThread(plugin_name, event)
+
+            elif event.type == FRIEND_RECALL_EVENT:
+                event_thread = OnFriendRecallEventThread(plugin_name, event)
+
+            elif event.type == GROUP_NAME_CHANGE_EVENT:
+                event_thread = OnGroupNameChangeEventThread(plugin_name, event)
+
+            elif event.type == GROUP_ENTRANCE_ANNOUNCEMENT_CHANGE_EVENT:
+                event_thread = OnGroupEntranceAnnouncementChangeEventThread(plugin_name, event)
+
+            elif event.type == GROUP_MUTE_ALL_EVENT:
+                event_thread = OnGroupMuteAllEventThread(plugin_name, event)
+
+            elif event.type == GROUP_ALLOW_ANONYMOUS_CHAT_EVENT:
+                event_thread = OnGroupAllowAnonymousChatEventThread(plugin_name, event)
+
+            elif event.type == GROUP_ALLOW_CONFESS_TALK_EVENT:
+                event_thread = OnGroupAllowConfessTalkEventThread(plugin_name, event)
+
+            elif event.type == GROUP_ALLOW_MEMBER_INVITE_EVENT:
+                event_thread = OnGroupAllowMemberInviteEventThread(plugin_name, event)
+
+            elif event.type == MEMBER_JOIN_EVENT:
+                event_thread = OnMemberJoinEventThread(plugin_name, event)
+
+            elif event.type == MEMBER_LEAVE_KICK_EVENT:
+                event_thread = OnMemberLeaveKickEventThread(plugin_name, event)
+
+            elif event.type == MEMBER_LEAVE_QUIT_EVENT:
+                event_thread = OnMemberLeaveQuitEventThread(plugin_name, event)
+
+            elif event.type == MEMBER_CARD_CHANGE_EVENT:
+                event_thread = OnMemberCardChangeEventThread(plugin_name, event)
+
+            elif event.type == MEMBER_SPECIAL_TITLE_CHANGE_EVENT:
+                event_thread = OnMemberSpecialTitleChangeEventThread(plugin_name, event)
+
+            elif event.type == MEMBER_PERMISSION_CHANGE_EVENT:
+                event_thread = OnMemberPermissionChangeEventThread(plugin_name, event)
+
+            elif event.type == MEMBER_MUTE_EVENT:
+                event_thread = OnMemberMuteEventThread(plugin_name, event)
+
+            elif event.type == MEMBER_UNMUTE_EVENT:
+                event_thread = OnMemberUnmuteEventThread(plugin_name, event)
+
+            elif event.type == NEW_FRIEND_REQUEST_EVENT:
+                event_thread = OnNewFriendRequestEventThread(plugin_name, event)
+
+            elif event.type == MEMBER_JOIN_REQUEST_EVENT:
+                event_thread = OnMemberJoinRequestEventThread(plugin_name, event)
+
+            elif event.type == BOT_INVITED_JOIN_GROUP_REQUEST_EVENT:
+                event_thread = OnBotInvitedJoinGroupRequestEventThread(plugin_name, event)
+
+            event_thread.daemon = True
+            event_thread.start()

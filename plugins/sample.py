@@ -27,3 +27,7 @@ def on_temp_message(msg, Conn):
         mc = MessageChain()
         mc.add_plain_text("你也很帅！")
         msg.send_message_back(mc)
+
+
+def on_bot_leave_kick_event(event, Conn):
+    print()
