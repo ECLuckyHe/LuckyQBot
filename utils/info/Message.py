@@ -4,7 +4,8 @@
 # @Email   : 673230244@qq.com
 # @File    : Message.py
 # @Software: PyCharm
-
+from utils.api.MessageChain import MessageChain
+from utils.connect.Conn import Conn
 from utils.constants import *
 from utils.info.Friend import Friend
 from utils.info.Group import Group
@@ -39,9 +40,9 @@ class Message:
         # 下面构建sender，由于sender类型有很多，因此需要单独处理
         sender = msg_data["sender"]
 
-        # 如果是群消息和临时消息，则sender为Member类型
+        # 如果是群消息和临时消息，则创建sender_member
         if self.type in [GROUP_MSG, TEMP_MSG]:
-            self.sender = Member(
+            self.sender_member = Member(
                 sender["id"],
                 sender["memberName"],
                 sender["permission"],
@@ -52,9 +53,9 @@ class Message:
                 )
             )
 
-        # 如果是好友消息，则类型为Friend
+        # 如果是好友消息，则创建sender_friend
         if self.type == FRIEND_MSG:
-            self.sender = Friend(
+            self.sender_friend = Friend(
                 sender["id"],
                 sender["nickname"],
                 sender["remark"]
@@ -99,3 +100,22 @@ class Message:
 
         return text
 
+    def send_message_back(self, message_chain: MessageChain) -> None:
+        """
+        原路发送消息（接收到的消息从哪里来就往哪里发）
+
+        :param message_chain: 消息内容chain
+        :return: 无
+        """
+        if self.is_group_message():
+            Conn.send_group_message(self.sender_member.group.id, message_chain)
+
+        if self.is_temp_message():
+            Conn.send_temp_message(
+                self.sender_member.qq,
+                self.sender_member.group.id,
+                message_chain
+            )
+
+        if self.is_friend_message():
+            Conn.send_friend_message(self.sender_friend.qq, message_chain)

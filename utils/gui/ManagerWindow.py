@@ -858,7 +858,7 @@ class ManagerWindow:
             if text == "\n":
                 return
             message_chain.add_plain_text(text)
-            Conn.send_friend_message(qq, message_chain.get_message_chain())
+            Conn.send_friend_message(qq, message_chain)
             self.text_friend_send.delete(1.0, END)
         except:
             messagebox.showerror(message=SEND_ERROR_MSG)
@@ -882,7 +882,7 @@ class ManagerWindow:
             if text == "\n":
                 return
             message_chain.add_plain_text(text)
-            Conn.send_group_message(qq, message_chain.get_message_chain())
+            Conn.send_group_message(qq, message_chain)
             self.text_group_send.delete(1.0, END)
         except:
             messagebox.showerror(message=SEND_ERROR_MSG)

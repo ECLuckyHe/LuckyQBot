@@ -4,14 +4,13 @@
 # @Email   : 673230244@qq.com
 # @File    : FetchMessageThread.py
 # @Software: PyCharm
-import json
 import time
 from threading import Thread
 
 from utils.GlobalValues import GlobalValues
 from utils.connect.Conn import Conn
+from utils.handler.plugin.PluginHandler import PluginHandler
 
-from utils.constants import *
 from utils.info.Message import Message
 
 
@@ -21,6 +20,15 @@ class FetchMessageThread(Thread):
 
     默认为1s获取一次
     """
+
+    def __init__(self):
+        """
+        构造方法
+        """
+
+        Thread.__init__(self)
+        self.msg: Message
+
     def run(self):
         while True:
             time.sleep(1)
@@ -34,17 +42,23 @@ class FetchMessageThread(Thread):
                 continue
 
             # 获取消息数据
+            # 同时处理可能出现的异常，直接忽略
             try:
-                msg_data_list = Conn.fetch_message(1)["data"]
-            except:
-                # 捕捉到异常则继续
+                data_list = Conn.fetch_message(1)["data"]
+            except Exception as e:
+                # 捕捉到异常则重新循环
+                print(e)
                 continue
 
             # 获取到的列表为空
-            if not msg_data_list:
+            if not data_list:
                 continue
 
             # 获取数据
-            msg_data = msg_data_list[0]
+            data = data_list[0]
 
-            print(Message(msg_data).get_plain_text())
+            if data["type"].endswith("Message"):
+                self.msg = Message(data)
+
+                # 调用执行插件内容
+                PluginHandler.call_on_message(self.msg)

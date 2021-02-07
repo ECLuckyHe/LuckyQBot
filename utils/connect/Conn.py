@@ -6,6 +6,7 @@
 # @Software: PyCharm
 
 from utils.GlobalValues import GlobalValues
+from utils.api.MessageChain import MessageChain
 from utils.connect.RequestSender import RequestSender
 
 
@@ -62,7 +63,7 @@ class Conn:
         return RequestSender.send_post("release", data)
 
     @staticmethod
-    def send_friend_message(qq: int, message_chain: list, quote: int = None) -> dict:
+    def send_friend_message(qq: int, message_chain: MessageChain, quote: int = None) -> dict:
         """
         发送消息给好友
 
@@ -72,17 +73,22 @@ class Conn:
 
         :return: 请求响应的内容
         """
+
+        # 添加调试信息
+        if GlobalValues.debug_var.get():
+            message_chain.add_plain_text("[调试]")
+
         data = {
             "sessionKey": GlobalValues.conn_session_key,
             "qq": qq,
-            "messageChain": message_chain
+            "messageChain": message_chain.get_message_chain()
         }
         if quote is not None:
             data["quote"] = quote
         return RequestSender.send_post("sendFriendMessage", data)
 
     @staticmethod
-    def send_temp_message(qq: int, group: int, message_chain: list, quote: int = None) -> dict:
+    def send_temp_message(qq: int, group: int, message_chain: MessageChain, quote: int = None) -> dict:
         """
         发送临时消息
 
@@ -94,18 +100,23 @@ class Conn:
 
         :return: 返回结果
         """
+
+        # 添加调试信息
+        if GlobalValues.debug_var.get():
+            message_chain.add_plain_text("[调试]")
+
         data = {
             "sessionKey": GlobalValues.conn_session_key,
             "qq": qq,
             "group": group,
-            "messageChain": message_chain
+            "messageChain": message_chain.get_message_chain()
         }
         if quote is not None:
             data["quote"] = quote
         return RequestSender.send_post("sendTempMessage", data)
 
     @staticmethod
-    def send_group_message(group: int, message_chain: list, quote: int = None) -> dict:
+    def send_group_message(group: int, message_chain: MessageChain, quote: int = None) -> dict:
         """
         发送群消息
 
@@ -114,10 +125,15 @@ class Conn:
         :param quote: 引用消息号
         :return: 响应信息
         """
+
+        # 添加调试信息
+        if GlobalValues.debug_var.get():
+            message_chain.add_plain_text("[调试]")
+
         data = {
             "sessionKey": GlobalValues.conn_session_key,
             "group": group,
-            "messageChain": message_chain
+            "messageChain": message_chain.get_message_chain()
         }
         if quote is not None:
             data["quote"] = quote
