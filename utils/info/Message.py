@@ -48,6 +48,9 @@ class Message:
         else:
             self.is_command = False
 
+        # 存储指令头
+        self.command_head = GlobalValues.command_head
+
         # 如果是群消息和临时消息，则创建sender_member
         if self.type in [GROUP_MSG, TEMP_MSG]:
             self.sender_member = Member(
