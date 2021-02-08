@@ -11,6 +11,25 @@ from utils.info.Message import Message
 from utils.connect.Conn import Conn
 
 
+class InitThread(Thread):
+    """
+    程序开始时执行插件init方法线程
+    """
+    def __init__(
+            self,
+            plugin_name: str
+    ):
+        Thread.__init__(self)
+        self.plugin_name = plugin_name
+
+    def run(self):
+        exec("from plugins import " + self.plugin_name)
+        try:
+            exec(self.plugin_name + ".init()")
+        except AttributeError:
+            pass
+
+
 class OnFriendMessageThread(Thread):
     """
     收到的消息为好友消息时调用

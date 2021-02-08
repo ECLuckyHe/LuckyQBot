@@ -100,6 +100,9 @@ class ManagerWindow:
         fetch_message_thread.daemon = True
         fetch_message_thread.start()
 
+        # 运行插件初始化方法
+        PluginHandler.call_init()
+
         # 显示界面
         self.root.mainloop()
 

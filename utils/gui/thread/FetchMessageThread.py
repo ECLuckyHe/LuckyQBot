@@ -48,7 +48,7 @@ class FetchMessageThread(Thread):
             try:
                 data_list = Conn.fetch_message(1)["data"]
             except Exception as e:
-                # 捕捉到异常则重新循环
+                # 捕捉到异常后打印并重新循环
                 print(e)
                 continue
 

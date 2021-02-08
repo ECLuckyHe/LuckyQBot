@@ -17,14 +17,26 @@ class PluginHandler:
     处理插件文件夹的操作相关类
     """
 
+    plugin_list = None
+
     @staticmethod
     def get_plugin_name_list() -> list:
         """
         获取插件列表文件
 
-        :return: 无
+        :return: 插件列表名称
         """
+        if PluginHandler.plugin_list is None:
+            PluginHandler.plugin_list = PluginHandler.__get_plugin_name_from_file()
+        return  PluginHandler.plugin_list
 
+    @staticmethod
+    def __get_plugin_name_from_file() -> list:
+        """
+        从文件中获取插件列表名称
+
+        :return: 插件列表名称
+        """
         # 载入插件文件夹
         try:
             import plugins
@@ -54,6 +66,21 @@ class PluginHandler:
 
         with open("plugins/__init__.py", "w", encoding="utf-8") as f:
             f.write("")
+
+    @staticmethod
+    def call_init() -> None:
+        """
+        运行插件init方法，该方法在加载时使用
+
+        :return: 无
+        """
+        for plugin_name in PluginHandler.get_plugin_name_list():
+            init_thread = None
+
+            # 对每个plugin_name创建一个线程
+            init_thread = InitThread(plugin_name)
+            init_thread.daemon = True
+            init_thread.start()
 
     @staticmethod
     def call_on_message(msg: Message) -> None:
