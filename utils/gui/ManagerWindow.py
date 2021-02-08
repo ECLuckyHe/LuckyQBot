@@ -18,6 +18,7 @@ from utils.constants import *
 from utils.api.ResponseExceptions import *
 from utils.gui.operation.OpListOperation import OpListOperation
 from utils.gui.thread.FetchMessageThread import FetchMessageThread
+from utils.handler.plugin.PluginHandler import PluginHandler
 
 
 class ManagerWindow:
@@ -68,6 +69,11 @@ class ManagerWindow:
         self.frame_group.pack(side=TOP)
         self.tab_main.add(self.frame_group, text=TAB_NAME_LIST["groups"]["text"])
 
+        # 插件选项卡
+        self.frame_plugin = Frame(self.tab_main, bg=BG_COLOR)
+        self.frame_plugin.pack(side=TOP)
+        self.tab_main.add(self.frame_plugin, text=TAB_NAME_LIST["plugins"]["text"])
+
         # 初始化登录选项卡
         self.__init_login_tab()
 
@@ -79,6 +85,9 @@ class ManagerWindow:
 
         # 初始化管理选项卡
         self.__init_manage_tab()
+
+        # 初始化插件选项卡
+        self.__init_plugin_tab()
 
         # 关闭窗口自动释放Session
         self.root.protocol("WM_DELETE_WINDOW", lambda: self.__on_close_root())
@@ -505,6 +514,29 @@ class ManagerWindow:
             command=lambda: self.__on_click_add_op()
         ).grid(row=14, column=2, padx=5, pady=5, sticky=EW)
 
+    def __init_plugin_tab(self):
+        """
+        初始化插件选项卡
+
+        :return: 无
+        """
+
+        # 指示标签
+        Label(self.frame_plugin, text=PLUGIN_LABEL_TEXT, bg=BG_COLOR).pack(side=TOP)
+
+        # 插件列表
+        self.treeview_plugin_list = Treeview(
+            self.frame_plugin,
+            columns=[
+                PLUGIN_GUIDE["pluginName"]
+            ],
+            show="headings",
+            selectmode=BROWSE
+        )
+        self.treeview_plugin_list.pack(padx=5, pady=5, fill=BOTH, expand=True)
+        self.treeview_plugin_list.column(PLUGIN_GUIDE["pluginName"])
+        self.treeview_plugin_list.heading(PLUGIN_GUIDE["pluginName"], text=PLUGIN_GUIDE["pluginName"])
+
     def __on_click_connect_event(self):
         """
         点击连接按钮事件
@@ -677,7 +709,7 @@ class ManagerWindow:
             self.treeview_op_list.delete(*self.treeview_op_list.get_children())
 
             # 把内容添加到显示中
-            for one_record in OpListOperation.get_list_from_file():
+            for one_record in OpListOperation.get_list():
                 self.treeview_op_list.insert("", index=END, values=(
                     one_record
                 ))
@@ -705,6 +737,17 @@ class ManagerWindow:
             GlobalValues.debug_var = self.debug_var
             GlobalValues.enable_var = self.enable_var
 
+        def refresh_plugin_list():
+            # 获取插件名称
+            plugin_names = PluginHandler.get_plugin_name_list()
+
+            # 显示
+            self.treeview_plugin_list.delete(*self.treeview_plugin_list.get_children())
+            for name in plugin_names:
+                self.treeview_plugin_list.insert("", index=END, values=(
+                    name
+                ))
+
         # 调用刷新登录列表
         refresh_login_list()
 
@@ -713,6 +756,9 @@ class ManagerWindow:
 
         # 刷新config显示
         refresh_config()
+
+        # 刷新插件列表显示
+        refresh_plugin_list()
 
     def __on_click_add_to_login_list(self):
         """
@@ -767,7 +813,7 @@ class ManagerWindow:
         :param event: 事件
         :return: 无
         """
-        def on_delete_event(iid):
+        def on_delete_event(item_id):
             """
             删除选项的事件
 
@@ -775,8 +821,8 @@ class ManagerWindow:
             """
 
             # 删除该项
-            LoginListOperation.remove_from_list(*self.treeview_login_list.item(iid, "values"))
-            self.treeview_login_list.delete(iid)
+            LoginListOperation.remove_from_list(*self.treeview_login_list.item(item_id, "values"))
+            self.treeview_login_list.delete(item_id)
             self.__refresh()
 
         # 获取选择对象
@@ -887,6 +933,8 @@ class ManagerWindow:
         except:
             messagebox.showerror(message=SEND_ERROR_MSG)
             return
+
+
 
     def __on_click_add_op(self):
         """

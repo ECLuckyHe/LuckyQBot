@@ -76,7 +76,7 @@ class Conn:
 
         # 添加调试信息
         if GlobalValues.debug_var.get():
-            message_chain.add_plain_text("[调试]")
+            message_chain.add_plain_text("\n[调试]")
 
         data = {
             "sessionKey": GlobalValues.conn_session_key,
@@ -103,7 +103,7 @@ class Conn:
 
         # 添加调试信息
         if GlobalValues.debug_var.get():
-            message_chain.add_plain_text("[调试]")
+            message_chain.add_plain_text("\n[调试]")
 
         data = {
             "sessionKey": GlobalValues.conn_session_key,
@@ -128,7 +128,7 @@ class Conn:
 
         # 添加调试信息
         if GlobalValues.debug_var.get():
-            message_chain.add_plain_text("[调试]")
+            message_chain.add_plain_text("\n[调试]")
 
         data = {
             "sessionKey": GlobalValues.conn_session_key,

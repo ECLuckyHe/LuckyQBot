@@ -14,14 +14,26 @@ class OpListOperation:
     操作bot的op列表的类
     """
 
+    op_list = None
+
     @staticmethod
-    def get_list_from_file() -> list:
+    def get_list() -> list:
+        """
+        获取管理qq列表（单例模式）
+
+        :return: 内容列表
+        """
+        if OpListOperation.op_list is None:
+            OpListOperation.op_list = OpListOperation.__get_list_from_file()
+        return OpListOperation.op_list
+
+    @staticmethod
+    def __get_list_from_file() -> list:
         """
         从文件中获取内容的列表
 
         :return: 内容列表
         """
-
         # 该文件是否存在
         try:
             open(OP_LIST_FILE_PATH, "r")
@@ -65,17 +77,20 @@ class OpListOperation:
         """
 
         # 获取当前列表
-        op_list = OpListOperation.get_list_from_file()
+        ops = OpListOperation.get_list()
 
         # 查重
-        if op_qq in op_list:
+        if op_qq in ops:
             return
 
         # 添加到列表中
-        op_list.append(op_qq)
+        ops.append(op_qq)
 
         # 写入到文件中
-        OpListOperation.__write_file(op_list)
+        OpListOperation.__write_file(ops)
+
+        # 重新读取
+        OpListOperation.op_list = OpListOperation.__get_list_from_file()
 
     @staticmethod
     def remove_from_list(op_qq: int) -> None:
@@ -87,10 +102,13 @@ class OpListOperation:
         """
 
         # 获取当前列表
-        op_list = OpListOperation.get_list_from_file()
+        ops = OpListOperation.get_list()
 
         # 获取并删除这个qq
-        op_list.remove(op_qq)
+        ops.remove(op_qq)
 
         # 写入到文件
-        OpListOperation.__write_file(op_list)
+        OpListOperation.__write_file(ops)
+
+        # 重新读取
+        OpListOperation.op_list = OpListOperation.__get_list_from_file()

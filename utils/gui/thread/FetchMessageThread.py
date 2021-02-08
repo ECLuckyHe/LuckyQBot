@@ -61,6 +61,7 @@ class FetchMessageThread(Thread):
             data_type = self.data["type"]
 
             if data_type.endswith("Message"):
+                # 判断为消息再读取
                 msg = Message(self.data)
 
                 # 调用执行插件内容

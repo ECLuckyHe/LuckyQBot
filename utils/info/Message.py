@@ -4,9 +4,11 @@
 # @Email   : 673230244@qq.com
 # @File    : Message.py
 # @Software: PyCharm
+from utils.GlobalValues import GlobalValues
 from utils.api.MessageChain import MessageChain
 from utils.connect.Conn import Conn
 from utils.constants import *
+from utils.gui.operation.OpListOperation import OpListOperation
 from utils.info.Friend import Friend
 from utils.info.Group import Group
 from utils.info.Member import Member
@@ -37,8 +39,14 @@ class Message:
         # time为时间戳
         self.time = source_info["time"]
 
-        # 下面构建sender，由于sender类型有很多，因此需要单独处理
+        # 下面构建sender，由于sender类型有多种，因此需要单独处理
         sender = msg_data["sender"]
+
+        # 是否为指令
+        if self.get_plain_text().startswith(GlobalValues.command_head):
+            self.is_command = True
+        else:
+            self.is_command = False
 
         # 如果是群消息和临时消息，则创建sender_member
         if self.type in [GROUP_MSG, TEMP_MSG]:
@@ -53,6 +61,12 @@ class Message:
                 )
             )
 
+            # 是否为bot op
+            if self.sender_member.qq in OpListOperation.get_list():
+                self.is_op = True
+            else:
+                self.is_op = False
+
         # 如果是好友消息，则创建sender_friend
         if self.type == FRIEND_MSG:
             self.sender_friend = Friend(
@@ -60,6 +74,12 @@ class Message:
                 sender["nickname"],
                 sender["remark"]
             )
+
+            # 是否为bot op
+            if self.sender_friend.qq in OpListOperation.get_list():
+                self.is_op = True
+            else:
+                self.is_op = False
 
     def is_group_message(self) -> bool:
         """

@@ -19,12 +19,16 @@ TAB_NAME_LIST = {
         "num": 1
     },
     "friends": {
-        "text": "好友",
+        "text": "好友（测试使用）",
         "num": 2
     },
     "groups": {
-        "text": "群",
+        "text": "群（测试使用）",
         "num": 3
+    },
+    "plugins": {
+        "text": "插件列表",
+        "num": 4
     }
 }
 
@@ -145,3 +149,9 @@ CONFIG_FILE_PATH = "config.yml"
 GROUP_MSG = "GroupMessage"
 FRIEND_MSG = "FriendMessage"
 TEMP_MSG = "TempMessage"
+
+PLUGIN_LABEL_TEXT = "插件列表仅显示被识别到的.py文件，如需增加、重载或删除插件，请手动重启程序"
+
+PLUGIN_GUIDE = {
+    "pluginName": "插件名"
+}
