@@ -68,7 +68,12 @@ class FetchMessageThread(Thread):
                 PluginHandler.call_on_message(msg)
 
             elif data_type.find("Event") != -1:
-                event = self.get_event()
+                try:
+                    event = self.get_event()
+                except TypeError:
+                    # 20210209更新
+                    # 此处有时会抛出TypeError，怀疑是mirai http本身问题
+                    return
 
                 # 调用执行插件内容
                 PluginHandler.call_on_event(event)
