@@ -70,9 +70,10 @@ class FetchMessageThread(Thread):
             elif data_type.find("Event") != -1:
                 try:
                     event = self.get_event()
-                except TypeError:
+                except TypeError as e:
                     # 20210209更新
                     # 此处有时会抛出TypeError，怀疑是mirai http本身问题
+                    print(str(e))
                     return
 
                 # 调用执行插件内容
