@@ -74,7 +74,7 @@ class FetchMessageThread(Thread):
                     # 20210209更新
                     # 此处有时会抛出TypeError，怀疑是mirai http本身问题
                     print(str(e))
-                    return
+                    continue
 
                 # 调用执行插件内容
                 PluginHandler.call_on_event(event)
