@@ -80,16 +80,16 @@ class RequestSender:
 
         :param response_dict: 返回结果的列表
         :return: 无
-        :exception WrongAuthkeyException
-        :exception BotNotExistException
-        :exception SessionInvalidException
-        :exception SessionNotCertifiedException
-        :exception MessageReceiverNotExistException
-        :exception FileNotExistException
-        :exception NoPermissionException
-        :exception BotSpeakNotAllowedException
-        :exception TooLongMessageException
-        :exception WrongAccessException
+        :exception WrongAuthkeyException:
+        :exception BotNotExistException:
+        :exception SessionInvalidException:
+        :exception SessionNotCertifiedException:
+        :exception MessageReceiverNotExistException:
+        :exception FileNotExistException:
+        :exception NoPermissionException:
+        :exception BotSpeakNotAllowedException:
+        :exception TooLongMessageException:
+        :exception WrongAccessException:
         """
 
         # 出现的一些特殊情况可以直接忽略
