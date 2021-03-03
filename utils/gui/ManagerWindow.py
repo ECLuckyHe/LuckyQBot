@@ -403,7 +403,7 @@ class ManagerWindow:
         # 刷新列表按钮
         Button(
             frame_group_send,
-            text=BTN_FRIEND_REFRESH,
+            text=BTN_GROUP_REFRESH,
             command=lambda: self.__on_click_refresh_group_list_event()
         ).grid(row=0, padx=5, pady=5)
 

@@ -87,6 +87,7 @@ SEND_TITLE = "测试发送内容"
 BTN_SEND = "发送消息"
 
 BTN_FRIEND_REFRESH = "刷新好友列表"
+BTN_GROUP_REFRESH = "刷新群列表"
 
 REFRESH_ERROR_MSG = "发生错误，请确保已连接"
 
