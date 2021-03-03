@@ -4,6 +4,7 @@
 [Mirai Console]: https://github.com/mamoe/mirai-console
 [启动Mirai Console]: https://github.com/mamoe/mirai-console/blob/master/docs/Run.md
 [MCDReforged]: https://github.com/Fallen-Breath/MCDReforged
+
 LuckyQBot是一个使用Python编写、基于 [Mirai-API-http] 插件（运行于 [Mirai Console] ）的、参照 [MCDReforged] 插件模式编写的、提供简单QQ消息收发功能的、通过可自定义的插件系统执行自定义功能的简单程序。
 
 ## 使用

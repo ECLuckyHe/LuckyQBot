@@ -92,7 +92,6 @@ class Conn:
         """
         发送临时消息
 
-        :param message_chain:
         :param qq: 接收方qq
         :param group: 接收方所在群
         :param message_chain: 消息列表
