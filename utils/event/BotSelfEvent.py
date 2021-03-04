@@ -19,7 +19,7 @@ class BotOnlineEvent(Event):
         """
         构造方法
 
-        :param qq: 登陆成功的Bot的QQ号
+        :param qq: 登录成功的Bot的QQ号
         """
         Event.__init__(self)
         self.type = BOT_ONLINE_EVENT
