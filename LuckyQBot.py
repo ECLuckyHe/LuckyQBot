@@ -4,6 +4,7 @@
 # @Email   : 673230244@qq.com
 # @File    : LuckyQBot.py
 # @Software: PyCharm
+import sys
 import time
 
 from utils.GlobalValues import GlobalValues
@@ -12,17 +13,10 @@ from utils.api.MessageChain import MessageChain
 from utils.gui.ManagerWindow import ManagerWindow
 from threading import Thread
 from utils.connect.Conn import Conn
+from utils.handler.command.CommandThread import CommandThread
 
-ManagerWindow()
+window = ManagerWindow()
 
-class MyThread(Thread):
-    def run(self):
-        printed = False
-        while True:
-            time.sleep(2)
-            if not GlobalValues.is_connected:
-                continue
-            if not printed:
-                printed = True
 
-# MyThread().start()
+
+window.root.mainloop()

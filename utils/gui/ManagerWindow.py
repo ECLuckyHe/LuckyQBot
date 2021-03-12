@@ -18,6 +18,7 @@ from utils.constants import *
 from utils.api.ResponseExceptions import *
 from utils.gui.operation.OpListOperation import OpListOperation
 from utils.gui.thread.FetchMessageThread import FetchMessageThread
+from utils.handler.command.CommandThread import CommandThread
 from utils.handler.plugin.PluginHandler import PluginHandler
 
 
@@ -109,7 +110,11 @@ class ManagerWindow:
         # 执行自动连接一次
         self.__auto_connect()
 
-        # 显示界面
+        # 指令系统线程
+        command_thread = CommandThread(self)
+        command_thread.start()
+
+        # 显示
         self.root.mainloop()
 
     def __init_login_tab(self):

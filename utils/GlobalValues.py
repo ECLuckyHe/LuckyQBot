@@ -20,5 +20,8 @@ class GlobalValues:
     # 请注意：此处的debug_var为tkinter中BooleanVar对象，而非bool值
     debug_var = None
 
-    # 请注意：此处的enable_varr为tkinter中BooleanVar对象，而非bool值
+    # 请注意：此处的enable_var为tkinter中BooleanVar对象，而非bool值
     enable_var = None
+
+    # 主窗口
+    manager_window = None
