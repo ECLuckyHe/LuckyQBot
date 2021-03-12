@@ -14,6 +14,7 @@ class ConfigOperation:
     管理界面中的配置
 
     20210205 目前只有指令头、调试复选框和消息读取启用
+    20210312 增加了自动连接勾选
     """
 
     @staticmethod
@@ -47,7 +48,14 @@ class ConfigOperation:
             yaml.dump({
                 "commandHead": "#",
                 "debug": False,
-                "enable": False
+                "enable": False,
+                "autoConnect": False,
+                "lastConnection": {
+                    "host": "127.0.0.1",
+                    "port": 25575,
+                    "authkey": "AUTHKEY",
+                    "qq": 1234567890
+                }
             }, f)
 
     @staticmethod

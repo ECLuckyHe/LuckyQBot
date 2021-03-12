@@ -37,6 +37,9 @@ class ManagerWindow:
         # 主窗口标题
         self.root.title(MANAGER_TITLE)
 
+        # 读取config
+        self.config_dict = ConfigOperation.get_dir_from_file()
+
         # 主窗口分辨率
         self.root.geometry("%sx%s+%s+%s" % (
             self.WIN_WIDTH,
@@ -102,6 +105,9 @@ class ManagerWindow:
 
         # 运行插件初始化方法
         PluginHandler.call_init()
+
+        # 执行自动连接一次
+        self.__auto_connect()
 
         # 显示界面
         self.root.mainloop()
@@ -221,6 +227,18 @@ class ManagerWindow:
         self.entry_qq = Entry(frame_login_menu)
         self.entry_qq.grid(row=3, column=1, sticky=W, padx=5, pady=5)
 
+        # 自动连接复选框
+        self.auto_connect_var = BooleanVar()
+        self.checkbutton_auto_connect = Checkbutton(
+            frame_login_menu,
+            text=AUTO_CONNECT_GUIDE,
+            onvalue=True,
+            offvalue=False,
+            variable=self.auto_connect_var,
+            bg=BG_COLOR
+        )
+        self.checkbutton_auto_connect.grid(row=4, column=0, padx=5, pady=5, columnspan=2)
+
         # 连接按钮
         self.btn_connect = Button(
             frame_login_menu,
@@ -228,7 +246,7 @@ class ManagerWindow:
             width=15,
             command=lambda: self.__on_click_connect_event(),
         )
-        self.btn_connect.grid(row=4, columnspan=2, padx=5, pady=5)
+        self.btn_connect.grid(row=5, columnspan=2, padx=5, pady=5)
 
         # 添加到登录列表按钮
         self.btn_save_login = Button(
@@ -237,7 +255,7 @@ class ManagerWindow:
             text=BTN_TEXT_ADD_LOGIN,
             command=lambda: self.__on_click_add_to_login_list()
         )
-        self.btn_save_login.grid(row=5, columnspan=2, padx=5, pady=5)
+        self.btn_save_login.grid(row=6, columnspan=2, padx=5, pady=5)
 
         # 状态栏
         self.label_login_status_bar = Label(
@@ -246,6 +264,19 @@ class ManagerWindow:
             fg=STATUS_BAR_COLOR["normal"]
         )
         self.label_login_status_bar.pack(side=LEFT)
+
+        # 下面开始从config中将内容填充进文本框中
+        self.entry_host.delete(0, END)
+        self.entry_host.insert(END, self.config_dict["lastConnection"]["host"])
+        self.entry_port.delete(0, END)
+        self.entry_port.insert(END, self.config_dict["lastConnection"]["port"])
+        self.entry_authkey.delete(0, END)
+        self.entry_authkey.insert(END, self.config_dict["lastConnection"]["authkey"])
+        self.entry_qq.delete(0, END)
+        self.entry_qq.insert(END, self.config_dict["lastConnection"]["qq"])
+
+        # 自动连接复选框内容
+        self.auto_connect_var.set(self.config_dict["autoConnect"])
 
     def __init_friend_tab(self):
         """
@@ -312,6 +343,12 @@ class ManagerWindow:
             FRIEND_GUIDE["remark"],
             text=FRIEND_GUIDE["remark"]
         )
+
+        # 设定好友列表的滚动条
+        scrollbar_friend_list = Scrollbar(frame_friend_list)
+        scrollbar_friend_list.pack(fill="y", expand=True)
+        self.treeview_friend_list.config(yscrollcommand=scrollbar_friend_list.set)
+        scrollbar_friend_list.config(command=self.treeview_friend_list.yview)
 
         # 刷新列表按钮
         Button(
@@ -399,6 +436,12 @@ class ManagerWindow:
             GROUP_GUIDE["permission"],
             text=GROUP_GUIDE["permission"]
         )
+
+        # 设定群列表的滚动条
+        scrollbar_group_list = Scrollbar(frame_group_list)
+        scrollbar_group_list.pack(fill="y", expand=True)
+        self.treeview_group_list.config(yscrollcommand=scrollbar_group_list.set)
+        scrollbar_group_list.config(command=self.treeview_group_list.yview)
 
         # 刷新列表按钮
         Button(
@@ -527,18 +570,34 @@ class ManagerWindow:
         # 指示标签
         Label(self.frame_plugin, text=PLUGIN_LABEL_TEXT, bg=BG_COLOR).pack(side=TOP)
 
+        # 插件列表frame
+        frame_plugin_list = Frame(self.frame_plugin, bg=BG_COLOR)
+        frame_plugin_list.pack(
+            side=TOP,
+            expand=True,
+            fill=BOTH,
+            padx=5,
+            pady=5
+        )
+
         # 插件列表
         self.treeview_plugin_list = Treeview(
-            self.frame_plugin,
+            frame_plugin_list,
             columns=[
                 PLUGIN_GUIDE["pluginName"]
             ],
             show="headings",
             selectmode=BROWSE
         )
-        self.treeview_plugin_list.pack(padx=5, pady=5, fill=BOTH, expand=True)
+        self.treeview_plugin_list.pack(fill=BOTH, expand=True, side=LEFT)
         self.treeview_plugin_list.column(PLUGIN_GUIDE["pluginName"])
         self.treeview_plugin_list.heading(PLUGIN_GUIDE["pluginName"], text=PLUGIN_GUIDE["pluginName"])
+
+        # 设定插件列表滚动条
+        scrollbar_plugin_list = Scrollbar(frame_plugin_list)
+        scrollbar_plugin_list.pack(fill="y", expand=True)
+        self.treeview_plugin_list.config(yscrollcommand=scrollbar_plugin_list.set)
+        scrollbar_plugin_list.config(command=self.treeview_plugin_list.yview)
 
     def __on_click_connect_event(self):
         """
@@ -561,8 +620,8 @@ class ManagerWindow:
                 self.label_login_status_bar.config(text=LOGIN_STATUS_BAR_TEXT["wrongQQ"], fg=STATUS_BAR_COLOR["failed"])
                 return
 
-            # 修改文本框为不可修改
-            self.__set_login_entries_active(False)
+            # 修改界面上的一些内容为不可修改
+            self.__set_login_tools_active(False)
 
             # 修改按钮内容
             self.btn_connect.config(text=BTN_TEXT_CONN["disconnect"])
@@ -586,7 +645,7 @@ class ManagerWindow:
                 )
 
                 # 修改文本框为可修改
-                self.__set_login_entries_active(True)
+                self.__set_login_tools_active(True)
                 self.btn_connect.config(text=BTN_TEXT_CONN["connect"])
                 return
             except WrongAuthkeyException:
@@ -599,7 +658,7 @@ class ManagerWindow:
                 )
 
                 # 修改文本框为可修改
-                self.__set_login_entries_active(True)
+                self.__set_login_tools_active(True)
                 self.btn_connect.config(text=BTN_TEXT_CONN["connect"])
                 return
 
@@ -611,7 +670,7 @@ class ManagerWindow:
                 )
 
                 # 修改文本框为可修改
-                self.__set_login_entries_active(True)
+                self.__set_login_tools_active(True)
                 self.btn_connect.config(text=BTN_TEXT_CONN["connect"])
                 return
 
@@ -623,11 +682,22 @@ class ManagerWindow:
             # 修改连接状态值
             GlobalValues.is_connected = True
 
+            # 修改上次连接键值对
+            ConfigOperation.modify_dict("lastConnection", {
+                "host": GlobalValues.conn_host,
+                "port": GlobalValues.conn_port,
+                "authkey": GlobalValues.conn_authkey,
+                "qq": GlobalValues.conn_qq
+            })
+
+            # 修改文件中自动连接开关
+            ConfigOperation.modify_dict("autoConnect", self.auto_connect_var.get())
+
         else:
             # 如果要断开连接
 
             # 修改文本框为可修改
-            self.__set_login_entries_active(True)
+            self.__set_login_tools_active(True)
 
             # 修改按钮名称
             self.btn_connect.config(text=BTN_TEXT_CONN["connect"])
@@ -644,9 +714,9 @@ class ManagerWindow:
             # 修改连接状态值
             GlobalValues.is_connected = False
 
-    def __set_login_entries_active(self, active: bool):
+    def __set_login_tools_active(self, active: bool):
         """
-        设置登录界面文本框的可用性
+        修改界面上的一些内容为不可修改
 
         :param active: bool，如果为False则禁用掉文本框，否则启用
         :return: 无
@@ -656,11 +726,13 @@ class ManagerWindow:
             self.entry_port.config(state=ACTIVE)
             self.entry_authkey.config(state=ACTIVE)
             self.entry_qq.config(state=ACTIVE)
+            self.checkbutton_auto_connect.config(state=ACTIVE)
         else:
             self.entry_host.config(state=DISABLED)
             self.entry_port.config(state=DISABLED)
             self.entry_authkey.config(state=DISABLED)
             self.entry_qq.config(state=DISABLED)
+            self.checkbutton_auto_connect.config(state=DISABLED)
 
     def __on_close_root(self):
         """
@@ -723,20 +795,19 @@ class ManagerWindow:
 
             :return: 无
             """
-
-            # 读取config
-            config_dict = ConfigOperation.get_dir_from_file()
+            # 重新获取config
+            self.config_dict = ConfigOperation.get_dir_from_file()
 
             # 将文件中的内容显示到界面中
             self.entry_command_head.delete(0, END)
-            self.entry_command_head.insert(END, config_dict["commandHead"])
+            self.entry_command_head.insert(END, self.config_dict["commandHead"])
 
             # 设置复选框默认勾选
-            self.debug_var.set(config_dict["debug"])
-            self.enable_var.set(config_dict["enable"])
+            self.debug_var.set(self.config_dict["debug"])
+            self.enable_var.set(self.config_dict["enable"])
 
             # 将内容设置到全局变量
-            GlobalValues.command_head = config_dict["commandHead"]
+            GlobalValues.command_head = self.config_dict["commandHead"]
             GlobalValues.debug_var = self.debug_var
             GlobalValues.enable_var = self.enable_var
 
@@ -971,7 +1042,7 @@ class ManagerWindow:
         :return: 无
         """
 
-        def on_delete_event(op_qq):
+        def on_delete_event():
             """
             删除选项的事件
 
@@ -993,7 +1064,7 @@ class ManagerWindow:
             self.treeview_op_list.selection_set(op_qq)
             menu_pop_up.add_command(
                 label=POP_UP_MENU_DELETE_STR,
-                command=lambda: on_delete_event(op_qq)
+                command=lambda: on_delete_event()
             )
             menu_pop_up.post(event.x_root, event.y_root)
 
@@ -1021,3 +1092,7 @@ class ManagerWindow:
 
         # 弹出对话框
         messagebox.showinfo(message=MANAGE_GUIDE["successSaveCommandHeadMsg"])
+
+    def __auto_connect(self):
+        if self.config_dict["autoConnect"]:
+            self.__on_click_connect_event()

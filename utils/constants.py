@@ -156,3 +156,5 @@ PLUGIN_LABEL_TEXT = "插件列表仅显示被识别到的.py文件，如需增�
 PLUGIN_GUIDE = {
     "pluginName": "插件名"
 }
+
+AUTO_CONNECT_GUIDE = "自动连接"
