@@ -110,10 +110,6 @@ class ManagerWindow:
         # 执行自动连接一次
         self.__auto_connect()
 
-        # 指令系统线程
-        command_thread = CommandThread(self)
-        command_thread.start()
-
         # 显示
         self.root.mainloop()
 

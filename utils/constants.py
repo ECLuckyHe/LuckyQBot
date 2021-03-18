@@ -158,3 +158,35 @@ PLUGIN_GUIDE = {
 }
 
 AUTO_CONNECT_GUIDE = "自动连接"
+
+WINDOW_RUN_COMMAND_GUIDE = "参数错误，如果需要使用图形化界面，请使用指令“python LuckyQBot.py”"
+CMD_RUN_COMMAND_GUIDE = "如果需要使用命令行控制，请使用指令“python LuckyQBot.py nogui”"
+
+COMMANDS = {
+    "exit": "exit",
+    "nogui": "nogui",
+    "help": "help",
+    "set": "set",
+    "show": "show",
+    # ------------------------
+    "helpGuide": "输入“help”以查看帮助",
+    "exiting": "退出程序",
+    "startMessage": "LuckyQBot已运行，请不要关闭此窗口",
+    "exitGuide": "输入“exit”以退出程序",
+    "unknownCommandGuide": "未知指令，请输入“help”以查看帮助",
+    "helpContent": "指令帮助信息\n"
+                   "help\t输出本消息\n"
+                   "set\t用于设置连接bot的相关配置\n"
+                   "show\t显示一些列表"
+                   "exit\t退出程序",
+    "setHelp": "set指令\n"
+               "set host <host>\t设置host\n"
+               "set port <port>\t设置端口\n"
+               "set authkey <authkey>\t设置授权码\n"
+               "set botqq <botqq>\t设置bot的QQ",
+    "showHelp": "show指令\n"
+                "show loginlist\t显示保存过的登录信息列表\n"
+                "show oplist\t显示bot管理员列表",
+    "loginListTableHead": "连接地址\t端口号\t授权码\tBotQQ",
+    "opListTableHead": "管理员QQ"
+}
