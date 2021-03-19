@@ -1,6 +1,6 @@
 # 选项卡
 
-[插件开发]: docs/plugins.md
+[插件开发]: plugins.md
 [Mirai-API-http]: https://github.com/project-mirai/mirai-api-http  
 
 程序界面启动后，有若干选项卡，不同选项卡提供的功能请参阅下文。
