@@ -168,6 +168,8 @@ COMMANDS = {
     "help": "help",
     "set": "set",
     "show": "show",
+    "connect": "connect",
+    "disconnect": "disconnect",
     # ------------------------
     "helpGuide": "输入“help”以查看帮助",
     "exiting": "退出程序",
@@ -177,7 +179,9 @@ COMMANDS = {
     "helpContent": "指令帮助信息\n"
                    "help\t输出本消息\n"
                    "set\t用于设置连接bot的相关配置\n"
-                   "show\t显示一些列表"
+                   "show\t显示一些列表\n"
+                   "connect\t开始连接\n"
+                   "disconnect\t断开连接\n"
                    "exit\t退出程序",
     "setHelp": "set指令\n"
                "set host <host>\t设置host\n"
@@ -188,5 +192,13 @@ COMMANDS = {
                 "show loginlist\t显示保存过的登录信息列表\n"
                 "show oplist\t显示bot管理员列表",
     "loginListTableHead": "连接地址\t端口号\t授权码\tBotQQ",
-    "opListTableHead": "管理员QQ"
+    "opListTableHead": "管理员QQ",
+    "connectedError": "已经连接了，请勿重复连接，如需断开，请输disconnect",
+    "setBotQQValueError": "格式错误，请输入QQ号",
+    "connectValueError": "连接参数错误，请检查地址、端口号、授权码、BotQQ是否设置正确",
+    "authkeyError": "授权码错误，请重新设置",
+    "botNotExistError": "BotQQ不存在，请重新设置BotQQ",
+    "connectSuccess": "连接成功，当前已连接",
+    "disconnectedError": "当前未连接，请输connect连接",
+    "disconnectSuccess": "断开连接成功，当前已断开"
 }

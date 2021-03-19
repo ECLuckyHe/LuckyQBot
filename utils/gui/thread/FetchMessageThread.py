@@ -40,8 +40,12 @@ class FetchMessageThread(Thread):
                 continue
 
             # 如果未启用，则不接受消息
-            if not GlobalValues.enable_var.get():
-                continue
+            # 20210319 使用指令系统时此处会报错，因此直接通过
+            try:
+                if not GlobalValues.enable_var.get():
+                    continue
+            except AttributeError:
+                pass
 
             # 获取消息数据
             # 同时处理可能出现的异常，直接忽略
@@ -49,7 +53,7 @@ class FetchMessageThread(Thread):
                 data_list = Conn.fetch_message(1)["data"]
             except Exception as e:
                 # 捕捉到异常后打印并重新循环
-                print(e)
+                # print(e)
                 continue
 
             # 获取到的列表为空
@@ -73,7 +77,7 @@ class FetchMessageThread(Thread):
                 except TypeError as e:
                     # 20210209更新
                     # 此处有时会抛出TypeError，怀疑是mirai http本身问题
-                    print(str(e))
+                    # print(str(e))
                     continue
 
                 # 调用执行插件内容

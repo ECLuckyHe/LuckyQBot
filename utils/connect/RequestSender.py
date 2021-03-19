@@ -33,8 +33,12 @@ class RequestSender:
         response = s.get(url=url, headers=headers)
 
         # 只有在调试模式下才输出
-        if GlobalValues.debug_var.get():
-            print("Response:", response.text)
+        # 20210319 编写指令系统时发现此处必须要创建窗口对象才不会报错，故直接获取异常并跳过
+        try:
+            if GlobalValues.debug_var.get():
+                print("Response:", response.text)
+        except AttributeError:
+            pass
 
         # 调用方法检查code，并抛出异常
         RequestSender.__check_status_code(json.loads(response.text))
@@ -52,8 +56,12 @@ class RequestSender:
         :return: 响应信息字典
         """
         # 只有在调试模式下才输出
-        if GlobalValues.debug_var.get():
-            print("Post Request:", request_keyword, data)
+        # 20210319 编写指令系统时发现此处必须要创建窗口对象才不会报错，故直接获取异常并跳过
+        try:
+            if GlobalValues.debug_var.get():
+                print("Post Request:", request_keyword, data)
+        except AttributeError:
+            pass
 
         url = "http://" + GlobalValues.conn_host + ":" + GlobalValues.conn_port + "/" + request_keyword
         data = json.dumps(data)
@@ -64,8 +72,11 @@ class RequestSender:
         response = s.post(url=url, data=data, headers=headers)
 
         # 只有在调试模式下才输出
-        if GlobalValues.debug_var.get():
-            print("Response:", response.text)
+        try:
+            if GlobalValues.debug_var.get():
+                print("Response:", response.text)
+        except AttributeError:
+            pass
 
         # 调用方法检查code，并抛出异常
         RequestSender.__check_status_code(json.loads(response.text))

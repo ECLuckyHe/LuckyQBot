@@ -75,8 +75,12 @@ class Conn:
         """
 
         # 添加调试信息
-        if GlobalValues.debug_var.get():
-            message_chain.add_plain_text("\n[调试]")
+        # 异常处理是为了迁就指令系统
+        try:
+            if GlobalValues.debug_var.get():
+                message_chain.add_plain_text("\n[调试]")
+        except AttributeError:
+            pass
 
         data = {
             "sessionKey": GlobalValues.conn_session_key,
@@ -101,8 +105,12 @@ class Conn:
         """
 
         # 添加调试信息
-        if GlobalValues.debug_var.get():
-            message_chain.add_plain_text("\n[调试]")
+        # 异常处理是为了迁就指令系统
+        try:
+            if GlobalValues.debug_var.get():
+                message_chain.add_plain_text("\n[调试]")
+        except AttributeError:
+            pass
 
         data = {
             "sessionKey": GlobalValues.conn_session_key,
@@ -126,8 +134,12 @@ class Conn:
         """
 
         # 添加调试信息
-        if GlobalValues.debug_var.get():
-            message_chain.add_plain_text("\n[调试]")
+        # 异常处理是为了迁就指令系统
+        try:
+            if GlobalValues.debug_var.get():
+                message_chain.add_plain_text("\n[调试]")
+        except AttributeError:
+            pass
 
         data = {
             "sessionKey": GlobalValues.conn_session_key,
