@@ -228,3 +228,12 @@ class MessageChain:
             "type": "Poke",
             "name": poke
         })
+
+    def add_one_dict(self, d: dict) -> None:
+        """
+        将一个字典添加到__message_chain中（message chain拼接时可用）
+
+        :param d: 要插入的字典
+        :return: 无
+        """
+        self.__message_chain.append(d)
