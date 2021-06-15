@@ -353,7 +353,7 @@ def init():
 | `group.permission` | `str` | Bot在群中的权限 |
 
 #### Bot主动退出一个群
-当Bot主动退出一个群时，`on_bot_leave_active_event(self.event, Conn)`将会被调用。
+当Bot主动退出一个群时，`on_bot_leave_active_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -362,7 +362,7 @@ def init():
 | `group.permission` | `str` | Bot在群中的权限 |
 
 #### Bot被踢出一个群
-当Bot被踢出一个群时，`on_bot_leave_kick_event(self.event, Conn)`将会被调用。
+当Bot被踢出一个群时，`on_bot_leave_kick_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -371,7 +371,7 @@ def init():
 | `group.permission` | `str` | Bot在群中的权限 |
 
 #### 群消息撤回
-当群消息被撤回时，`on_group_recall_event(self.event, Conn)`将会被调用。
+当群消息被撤回时，`on_group_recall_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -389,7 +389,7 @@ def init():
 | `operator.group` | `Group` | 同`group` |
 
 #### 好友消息撤回
-当好友消息被撤回时， `on_friend_recall_event(self.event, Conn)`将会被调用。
+当好友消息被撤回时， `on_friend_recall_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -399,7 +399,7 @@ def init():
 | `operator_qq` | `int` | 好友QQ号或BotQQ号 |
 
 #### 某个群名改变
-当某个群名改变时，`on_group_name_change_event(self.event, Conn)`将会被调用。
+当某个群名改变时，`on_group_name_change_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -417,7 +417,7 @@ def init():
 | `operator.group` | `Group` | 同`group` |
 
 #### 某群入群公告改变
-当某群入群公告改变时，`on_group_entrance_announcement_change_event(self.event, Conn)`将会被调用。
+当某群入群公告改变时，`on_group_entrance_announcement_change_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -435,7 +435,7 @@ def init():
 | `operator.group` | `Group` | 同`group` |
 
 #### 全员禁言开关
-当某群全员禁言或解除时，`on_group_mute_all_event(self.event, Conn)`将会被调用。
+当某群全员禁言或解除时，`on_group_mute_all_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -453,7 +453,7 @@ def init():
 | `operator.group` | `Group` | 同`group` |
 
 #### 匿名聊天开关
-当某群匿名聊天被开启或关闭时，`on_group_allow_anonymous_chat_event(self.event, Conn)`将会被调用。
+当某群匿名聊天被开启或关闭时，`on_group_allow_anonymous_chat_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -471,7 +471,7 @@ def init():
 | `operator.group` | `Group` | 同`group` |
 
 #### 坦白说开关
-当某群坦白说被开启或关闭时，`on_group_allow_confess_talk_event(self.event, Conn)`将会被调用。
+当某群坦白说被开启或关闭时，`on_group_allow_confess_talk_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -484,7 +484,7 @@ def init():
 | `is_by_bot` | `bool` | 是否为Bot进行的该操作 |
 
 #### 允许群员邀请好友加群修改
-当某群进行允许群员邀请好友加群设置修改时，`on_group_allow_member_invite_event(self.event, Conn)`将会被调用。
+当某群进行允许群员邀请好友加群设置修改时，`on_group_allow_member_invite_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -502,7 +502,7 @@ def init():
 | `operator.group` | `Group` | 同`group` |
 
 #### 新人入群
-当某群有新人入群时，`on_member_join_event(self.event, Conn)`将会被调用。
+当某群有新人入群时，`on_member_join_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -514,7 +514,7 @@ def init():
 | `member.group.permission` | `str` | Bot在群中的权限 |
 
 #### 成员被踢出群（该成员不是Bot）
-当某群成员被踢出群（该成员不是Bot）时，`on_member_leave_kick_event(self.event, Conn)`将会被调用。
+当某群成员被踢出群（该成员不是Bot）时，`on_member_leave_kick_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -532,7 +532,7 @@ def init():
 | `operator.group` | `Group` | 同`member.group` |
 
 #### 成员主动离群（该成员不是Bot）
-当某群成员主动离群（该成员不是Bot）时，`on_member_leave_quit_event(self.event, Conn)`将会被调用。
+当某群成员主动离群（该成员不是Bot）时，`on_member_leave_quit_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -544,7 +544,7 @@ def init():
 | `member.group.permission` | `str` | Bot在群中的权限 |
 
 #### 群名片改动
-当某群某人群名片被改动时，`on_member_card_change_event(self.event, Conn)`将会被调用。
+当某群某人群名片被改动时，`on_member_card_change_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -565,7 +565,7 @@ def init():
 | `operator.group` | `Group` | 同`member.group` |
 
 #### 群头衔改动
-当某群某人群头衔被改动时，`on_member_special_title_change_event(self.event, Conn)`将会被调用。
+当某群某人群头衔被改动时，`on_member_special_title_change_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -580,7 +580,7 @@ def init():
 | `member.group.permission` | `str` | Bot在群中的权限 |
 
 #### 成员权限改变（该成员不是Bot）
-当某群成员权限改变（该成员不是Bot）时，`on_member_permission_change_event(self.event, Conn)`将会被调用。
+当某群成员权限改变（该成员不是Bot）时，`on_member_permission_change_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -595,7 +595,7 @@ def init():
 | `member.group.permission` | `str` | Bot在群中的权限 |
 
 #### 群成员被禁言（该成员不是Bot）
-当某群群成员被禁言（该成员不是Bot）时，`on_member_mute_event(self.event, Conn)`将会被调用。
+当某群群成员被禁言（该成员不是Bot）时，`on_member_mute_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -614,7 +614,7 @@ def init():
 | `operator.group` | `Group` | 同`member.group` |
 
 #### 群成员被取消禁言（该成员不是Bot）
-当群成员被取消禁言（该成员不是Bot）时，`on_member_unmute_event(self.event, Conn)`将会被调用。
+当群成员被取消禁言（该成员不是Bot）时，`on_member_unmute_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -632,7 +632,7 @@ def init():
 | `operator.group` | `Group` | 同`member.group` |
 
 #### 添加好友申请
-当收到添加好友申请时，`on_new_friend_request_event(self.event, Conn)`将会被调用。
+当收到添加好友申请时，`on_new_friend_request_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -643,7 +643,7 @@ def init():
 | `message` | `str` | 申请消息 |
 
 #### 用户入群申请
-当收到用户入群申请时，`on_member_join_request_event(self.event, Conn)`将会被调用。
+当收到用户入群申请时，`on_member_join_request_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |
@@ -655,7 +655,7 @@ def init():
 | `message` | `str` | 申请消息 |
 
 #### Bot被邀请入群申请
-当Bot收到被邀请入群的申请时，`on_bot_invited_join_group_request_event(self.event, Conn)`将会被调用。
+当Bot收到被邀请入群的申请时，`on_bot_invited_join_group_request_event(event, Conn)`将会被调用。
 
 | 变量 | 类型 | 说明 |
 | ---- | ---- | ---- |

@@ -36,7 +36,6 @@ class CommandThread(Thread):
         GlobalValues.conn_qq = config_dict["lastConnection"]["qq"]
         GlobalValues.command_head = config_dict["commandHead"]
 
-
         # 运行消息进程
         fetch_message_thread = FetchMessageThread()
         fetch_message_thread.daemon = True

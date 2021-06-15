@@ -173,7 +173,7 @@ COMMANDS = {
     # ------------------------
     "helpGuide": "输入“help”以查看帮助",
     "exiting": "退出程序",
-    "startMessage": "LuckyQBot已运行，请不要关闭此窗口",
+    "startMessage": "LuckyQBot已运行，请不要关闭此窗口或Shell",
     "exitGuide": "输入“exit”以退出程序",
     "unknownCommandGuide": "未知指令，请输入“help”以查看帮助",
     "helpContent": "指令帮助信息\n"
@@ -202,3 +202,5 @@ COMMANDS = {
     "disconnectedError": "当前未连接，请输connect连接",
     "disconnectSuccess": "断开连接成功，当前已断开"
 }
+
+NO_GUI_MODEL_ERROR_MSG = "未找到Tkinter模块，但该程序可以通过命令行形式执行"

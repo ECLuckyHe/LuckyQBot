@@ -10,7 +10,6 @@ import time
 from utils.GlobalValues import GlobalValues
 from utils.api.MessageChain import MessageChain
 
-from utils.gui.ManagerWindow import ManagerWindow
 from threading import Thread
 from utils.connect.Conn import Conn
 from utils.handler.command.CommandThread import CommandThread
@@ -21,7 +20,12 @@ l = len(args)
 
 if l == 1:
     print(CMD_RUN_COMMAND_GUIDE)
-    ManagerWindow()
+    try:
+        from utils.gui.ManagerWindow import ManagerWindow
+        ManagerWindow()
+    except ModuleNotFoundError:
+        print(NO_GUI_MODEL_ERROR_MSG)
+        print(CMD_RUN_COMMAND_GUIDE)
     exit()
 
 if l == 2 and args[1] == COMMANDS["nogui"]:
